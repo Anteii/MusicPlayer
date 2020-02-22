@@ -1,5 +1,5 @@
 #include "MusicPlayer.h"
-
+#include <Thread>
 
 void list_audio_devices(const ALCchar* devices)
 {
@@ -59,7 +59,7 @@ int MusicPlayer::play(MusicFile& musicFile)
 	// check for errors
 	alSource3f(source, AL_VELOCITY, 0, 0, 0);
 	// check for errors
-	alSourcei(source, AL_LOOPING, AL_FALSE);
+	alSourcei(source, AL_LOOPING, AL_TRUE);
 	// check for errros
 
 	ALuint buffer;
@@ -72,15 +72,40 @@ int MusicPlayer::play(MusicFile& musicFile)
 	ALint source_state;
 	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	// check for errors
-	while (source_state == AL_PLAYING) {
+	bool flag = true;
+	std::cout << "Controls: " << std::endl << "play, pause, stop" << std::endl;
+	std::thread reader([source, &flag]() {
+		std::string command;
+		while (std::cin >> command) {
+			if (command == "stop") {
+				flag = false;
+				break;
+			}
+			else if (command == "play") {
+				alSourcePlay(source);
+			}
+			else if (command == "pause") {
+				alSourcePause(source);
+			}
+		}
+	});
+	
+	while (flag) {
 		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 		// check for errors
 	}
+	reader.join();
+
+	alSourceStop(source);
+	
+	//free resources
+
 	alDeleteSources(1, &source);
 	alDeleteBuffers(1, &buffer);
 	device = alcGetContextsDevice(context);
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
+
 	return 0;
 }

@@ -8,6 +8,5 @@ int main() {
 	errno_t err;
 	Decoder::DecodeFile(musicFile, err, "Resources\\Music\\ass.wav\0");
 	MusicPlayer::play(musicFile);
-
 	return 0;
 }

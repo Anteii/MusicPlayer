@@ -17,8 +17,9 @@ int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName
 		sizeof(musicFile.header),
 		sizeof(musicFile.header),
 		1,
-		file
-	);
+		file);
+
+	// SKIP USELESS CHUNKS
 	while (true) {
 		unsigned long size = musicFile.header.subchunk2Size;
 		//0x64617461
@@ -50,8 +51,7 @@ int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName
 		buffer->size * sizeof(short int),
 		sizeof(short int),
 		buffer->size,
-		file
-	);
+		file);
 
 	fclose(file);
 }

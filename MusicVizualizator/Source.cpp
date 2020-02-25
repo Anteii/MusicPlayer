@@ -8,7 +8,7 @@ int main() {
 	MusicFile musicFile;
 	errno_t err;
 
-	Decoder::DecodeFile(musicFile, err, "Resources\\Music\\hooked.wav\0");
+	Decoder::DecodeFile(musicFile, err, "Resources\\Music\\sleep.wav\0");
 
 	std::cout << "Frequency: " << musicFile.header.sampleRate << std::endl;
 	std::cout << "Channels number: " << musicFile.header.numChannels << std::endl;

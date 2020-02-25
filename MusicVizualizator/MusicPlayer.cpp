@@ -66,14 +66,14 @@ int MusicPlayer::play(MusicFile& musicFile)
 
 	alGenBuffers((ALuint)1, &buffer);
 	// check for errors
-	alBufferData(buffer, AL_FORMAT_STEREO16, musicFile.samplesBuffer.arr, musicFile.samplesBuffer.size, 44100);
+	alBufferData(buffer, AL_FORMAT_STEREO16, musicFile.samplesBuffer.arr, musicFile.samplesBuffer.size, musicFile.header.sampleRate);
 	alSourcei(source, AL_BUFFER, buffer);
 	alSourcePlay(source);
 	ALint source_state;
 	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	// check for errors
 	bool flag = true;
-	std::cout << "Controls: " << std::endl << "play, pause, stop" << std::endl;
+	std::cout << "Controls: " << std::endl << "play, pause, stop, time" << std::endl;
 	std::thread reader([source, &flag]() {
 		std::string command;
 		while (std::cin >> command) {
@@ -86,6 +86,11 @@ int MusicPlayer::play(MusicFile& musicFile)
 			}
 			else if (command == "pause") {
 				alSourcePause(source);
+			}
+			else if (command == "time") {
+				float pos = 0;
+				alGetSourcef(source, AL_SEC_OFFSET, &pos);
+				std::cout << pos << " s" << std::endl;
 			}
 		}
 	});

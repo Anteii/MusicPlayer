@@ -220,7 +220,6 @@ void MainWindow::makeConnections()
 
 void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << "double click!";
     QString type = item->data(Qt::UserRole).toString();
     QString text = item->text();
 

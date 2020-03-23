@@ -1,0 +1,6 @@
+QPushButton#prevTrackBtn{
+	background-color: transparent;
+	border-image: url(:/Buttons/resources/icons/buttons/prev.png);
+	border: none;
+	background-repeat: none;
+}

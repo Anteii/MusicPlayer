@@ -1,0 +1,6 @@
+QPushButton#nextTrackBtn{
+    background-color: transparent;
+    border-image: url(:/Buttons/resources/icons/buttons/next.png);
+    border: none;
+    background-repeat: none;
+}

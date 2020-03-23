@@ -1,0 +1,10 @@
+QPushButton#replayTrackBtn{
+	border-image: url(:/Buttons/resources/icons/buttons/repeat.png);
+}
+QPushButton#replayTrackBtn:hover{
+	border-style: inset;
+}
+QPushButton#replayTrackBtn:pressed{
+        background-color: #a3bce6;
+	border-style: inset;
+}

@@ -1,0 +1,10 @@
+QPushButton#randTrackBtn{
+	border-image: url(:/Buttons/resources/icons/buttons/rand.png);
+}
+QPushButton#randTrackBtn:hover {
+	border-style: inset;
+}
+QPushButton#randTrackBtn:pressed {
+        background-color: #a3bce6;
+	border-style: inset;
+}

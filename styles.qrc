@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/buttons">
+        <file>resources/styles/buttons/randTrackBtn.css</file>
+        <file>resources/styles/buttons/randTrackBtnPressed.css</file>
+        <file>resources/styles/buttons/repeatTrackBtn.css</file>
+        <file>resources/styles/buttons/repeatTrackBtnPressed.css</file>
+        <file>resources/styles/buttons/nextTrackBtn.css</file>
+        <file>resources/styles/buttons/prevTrackBtn.css</file>
+        <file>resources/styles/buttons/pauseBtn.css</file>
+        <file>resources/styles/buttons/playBtn.css</file>
+    </qresource>
+    <qresource prefix="/scrollBars"/>
+    <qresource prefix="/sliders">
+        <file>resources/styles/sliders/trackTimingSlider.css</file>
+        <file>resources/styles/sliders/volumeSlider.css</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/Buttons">
+        <file>resources/icons/buttons/next.png</file>
+        <file>resources/icons/buttons/pause.png</file>
+        <file>resources/icons/buttons/play.png</file>
+        <file>resources/icons/buttons/prev.png</file>
+        <file>resources/icons/buttons/rand.png</file>
+        <file>resources/icons/buttons/repeat.png</file>
+        <file>resources/icons/buttons/volume.png</file>
+    </qresource>
+    <qresource prefix="/Windows">
+        <file>resources/icons/windows/mainWindow.png</file>
+    </qresource>
+    <qresource prefix="/ListItems">
+        <file>resources/icons/listItems/back.png</file>
+        <file>resources/icons/listItems/playlist.png</file>
+        <file>resources/icons/listItems/track.png</file>
+    </qresource>
+</RCC>

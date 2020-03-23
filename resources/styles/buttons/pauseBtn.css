@@ -1,0 +1,3 @@
+QPushButton#playPauseBtn{
+    border-image: url(:/Buttons/resources/icons/buttons/pause.png);
+}

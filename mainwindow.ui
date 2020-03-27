@@ -71,7 +71,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QOpenGLWidget" name="openGLWidget">
+      <widget class="Graphic" name="openGLWidget">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -535,6 +535,13 @@ border-radius: 4px;
    </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Graphic</class>
+   <extends>QOpenGLWidget</extends>
+   <header location="global">graphic.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

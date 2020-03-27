@@ -1,7 +1,7 @@
 QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+QT += opengl
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -17,10 +17,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     fileassistant.cpp \
+    graphic.cpp \
     listcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
     musicfiledecoder.cpp \
+    ogltest.cpp \
     player.cpp \
     playlist.cpp \
     styler.cpp \
@@ -28,11 +30,14 @@ SOURCES += \
     volumecontroller.cpp
 
 HEADERS += \
+    Visualization.h \
     fileassistant.h \
+    graphic.h \
     listcontroller.h \
     mainwindow.h \
     musicfile.h \
     musicfiledecoder.h \
+    ogltest.h \
     player.h \
     playlist.h \
     styler.h \
@@ -53,7 +58,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 
 win32: LIBS += -L$$PWD/dep/openal/libs/Win32/ -lOpenAL32
-
+LIBS += -lopengl32
 INCLUDEPATH += $$PWD/dep/openal/include
 DEPENDPATH += $$PWD/dep/openal/include
 

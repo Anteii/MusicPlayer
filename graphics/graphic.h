@@ -3,14 +3,13 @@
 
 #include <QWidget>
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_5_Core>
 #include <QPainter>
 #include <thread>
 #include "Visualization.h"
 #include "ogltest.h"
 
 // Baisc class wich will be containing different visualisations
-class Graphic : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
+class Graphic : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
   Q_OBJECT
 

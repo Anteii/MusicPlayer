@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-OGLTest::OGLTest(OGLF * f) : QOpenGLFunctions_4_5_Core(*f)
+OGLTest::OGLTest(OGLF * f) : QOpenGLFunctions_4_3_Core(*f)
 {
   //initializeOpenGLFunctions();
   points = new float[9]{

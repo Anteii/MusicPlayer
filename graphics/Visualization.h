@@ -1,7 +1,7 @@
 #ifndef VISUALIZATION_H
 #define VISUALIZATION_H
-#include <QOpenGLFunctions_4_5_Core>
-#define OGLF QOpenGLFunctions_4_5_Core
+#include <QOpenGLFunctions_4_3_Core>
+#define OGLF QOpenGLFunctions_4_3_Core
 
 class Visualization{
 public:

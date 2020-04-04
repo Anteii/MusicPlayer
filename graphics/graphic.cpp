@@ -12,7 +12,7 @@ void Graphic::setEffect(Visualization *ef)
   effect = ef;
 }
 
-QOpenGLFunctions_4_5_Core *Graphic::getOGLF()
+QOpenGLFunctions_4_3_Core *Graphic::getOGLF()
 {
   return (OGLF*)this;
 }
@@ -111,6 +111,7 @@ void Graphic::transformPoint(GLdouble out[], const GLdouble m[], const GLdouble 
 void Graphic::initializeGL()
 {
   initializeOpenGLFunctions();
+  create();
   qDebug() << "Initialize";
 }
 
@@ -133,6 +134,20 @@ void Graphic::paintGL()
   if (isInitedEffect && effect != NULL){
       effect->update();
     }
+
+  glColor3f(1, 0, 0);
+  for(int i = 0; i < 20; i++){
+      glBegin(GL_TRIANGLES);
+          glVertex3f((i-10.0)/10, -1, 0);
+          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
+          glVertex3f((i-10.0 + 0.9)/10, -1, 0);
+      glEnd();
+      glBegin(GL_TRIANGLES);
+          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
+          glVertex3f((i-10.0)/10, -1, 0);
+          glVertex3f((i-10.0)/10, -0.9, 0);
+      glEnd();
+  }
 
 }
 

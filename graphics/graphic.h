@@ -5,6 +5,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_4_5_Core>
 #include <QPainter>
+#include <thread>
 #include "Visualization.h"
 #include "ogltest.h"
 
@@ -16,8 +17,14 @@ class Graphic : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
 public:
   explicit Graphic(QWidget *parent = nullptr);
   void setEffect(Visualization * ef);
+  OGLF* getOGLF();
+  QOpenGLContext * getContext();
+  void initEffect();
+  void deInitEffect();
 
 private:
+  boolean isInitedEffect = false;
+  void initUpdaterThread();
   Visualization * effect = NULL;
 
   void renderText(double x, double y, double z, const QString & str, const QFont & font, int listBase);
@@ -27,6 +34,7 @@ private:
                 GLdouble * winx, GLdouble * winy, GLdouble * winz);
   void transformPoint(GLdouble out[4], const GLdouble m[16], const GLdouble in[4]);
 
+  std::thread * updater = NULL;
 protected:
   void initializeGL() override;
   void resizeGL(int h, int w) override;

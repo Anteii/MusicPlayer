@@ -4,6 +4,8 @@
 
 #pragma once
 #include <iostream>
+#include "global_types/musicfile.h"
+
 
 struct MusicFile;
 

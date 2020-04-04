@@ -4,12 +4,13 @@
 #include <QMainWindow>
 #include <QListWidget>
 
-#include "player.h"
-#include "listcontroller.h"
-#include "fileassistant.h"
-#include "timingcontroller.h"
-#include "volumecontroller.h"
-
+#include "player_core/player.h"
+#include "controllers/listcontroller.h"
+#include "static_classes/fileassistant.h"
+#include "controllers/timingcontroller.h"
+#include "controllers/volumecontroller.h"
+#include "controllers/playercontroller.h"
+#include "player_core/player.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,6 +33,7 @@ private:
   void initList();
   void initTimingController();
   void initPlayer();
+  void initPlayerController();
   void initFA();
   void initStyles();
   void initVolumeController();
@@ -42,5 +44,6 @@ private:
   ListController * listController = NULL;
   TimingController * timingController = NULL;
   VolumeController * volumeController = NULL;
+  PlayerController * playerController = NULL;
 };
 #endif // MAINWINDOW_H

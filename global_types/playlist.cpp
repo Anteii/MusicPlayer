@@ -4,9 +4,11 @@
 PlayList::PlayList(QDir & dir) : PlayList()
 {
   QStringList names = dir.entryList();
+  QRegExp rx(".+\.(wav|mp3)");
   foreach(QString str, names){
-      if (str.compare("..") != 0 && str.compare(".") != 0)
+      if (rx.exactMatch(str) && !list->contains(str)){
         list->push_back(str);
+      }
     }
 }
 
@@ -16,10 +18,12 @@ PlayList::PlayList(QFile &  file) : PlayList()
 
   QTextStream st(&file);
   st.setCodec("UTF-8");
-  QString line;
-
-  while (st.readLineInto(&line)) {
-      list->push_back(QString(line));
+  QString str;
+  QRegExp rx(".+\.(wav|mp3)");
+  while (st.readLineInto(&str)) {
+      if (rx.exactMatch(str) && !list->contains(str)){
+        list->push_back(str);
+      }
   }
 
   file.close();

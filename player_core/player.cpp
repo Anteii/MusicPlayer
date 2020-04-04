@@ -1,6 +1,6 @@
 #include "player.h"
 
-void list_audio_devices(const ALCchar* devices)
+void Player::listAudioDevice(const ALCchar* devices)
 {
 	const ALCchar* device = devices, * next = devices + 1;
 	size_t len = 0;
@@ -16,10 +16,9 @@ void list_audio_devices(const ALCchar* devices)
 	fprintf(stdout, "----------\n");
 }
 
-Player::Player(QObject *parent) : QObject(parent)
+Player::Player()
 {
   initOAL();
-  createUpdaterThread();
 }
 
 int Player::getCurrentPosition()
@@ -32,7 +31,7 @@ int Player::getCurrentPosition()
   return pos;
 }
 
-int Player::getDurationOfSong()
+int Player::getDurationOfTrack()
 {
   if (!isReady) return 0;
   ALint sizeInBytes;
@@ -53,7 +52,7 @@ int Player::getDurationOfSong()
   return duration;
 }
 
-QString Player::getTrackName()
+QString Player::getCurrentTrackName()
 {
   if (currentPlayList == NULL) return "";
   return currentPlayList->getSong();
@@ -74,7 +73,7 @@ void Player::setPlaylist(PlayList * pl)
   currentPlayList = pl;
 }
 
-PlayList* Player::getPlayList()
+PlayList* Player::getPlaylist()
 {
   return currentPlayList;
 }
@@ -107,24 +106,23 @@ void Player::playPrevTrack()
 void Player::play()
 {
   if (!isReady) return;
-  //qDebug() << "play from player.play()";
   alSourcePlay(source);
 }
 
 void Player::pause()
 {
-  //qDebug() << "pause from player.pause()";
+  if (!isReady) return;
   alSourcePause(source);
 }
 
 void Player::setTime(int time)
 {
+  if (!isReady) return;
   alSourcef(source, AL_SEC_OFFSET, (float)time / 1000);
 }
 
 void Player::setLoopedTrack(bool flag)
 {
-  qDebug() << ( flag ? "Y" : "N" );
   _isLoopedTrack = flag;
 }
 
@@ -135,7 +133,6 @@ void Player::setLoopedPlaylist(bool flag)
 
 void Player::setRandTrack(bool flag)
 {
-  qDebug() << ( flag ? "Y" : "N" );
   _isRandTrack = flag;
 }
 
@@ -148,9 +145,7 @@ void Player::setVolume(float v)
 
 void Player::start()
 {
-  //qDebug() << "Started play plailist";
-  //qDebug() << currentPlayList->getSong();
-  loadSong(currentPlayList->getSong());
+  loadTrack(currentPlayList->getSong());
   play();
 }
 
@@ -162,64 +157,29 @@ bool Player::isPlaying()
   return state == AL_PLAYING;
 }
 
-void Player::makeConnections()
+bool Player::isPaused()
 {
-  connect(this,
-          &Player::songEnded,
-          this,
-          &Player::playNextTrack
-          );
+  if (!isReady) return false;
+  ALint state;
+  alGetSourcei(source, AL_SOURCE_STATE, &state);
+  return state == AL_PAUSED;
 }
 
-void Player::createUpdaterThread()
+bool Player::isStopped()
 {
-
-  int ptr = (int)this;
-
-  updatingThread = new std::thread([]( int ptr){
-      Player * player = (Player*)ptr;
-
-      while(true){
-
-          // init parameters
-          int pos;
-          ALint state = AL_NONE;
-
-          // while waiting for playing
-          while(alGetSourcei(player->source, AL_SOURCE_STATE, &state), state != AL_PLAYING){
-            //qDebug() << "waiting " << state;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-          }
-          // while playing
-          while(state == AL_PLAYING){
-              pos = player->getCurrentPosition();
-              emit player->positionChanged(pos);
-              std::this_thread::sleep_for(std::chrono::milliseconds(10));
-              alGetSourcei(player->source, AL_SOURCE_STATE, &state);
-              //qDebug() << "playing";
-            }
-          //qDebug() << "iteration sdox " << state;
-          if (state == AL_STOPPED){
-              //emit player->songEnded();
-              player->_loadNextTrack();
-              player->play();
-              qDebug() << "next";
-            }
-        }
-    }, ptr);
-
-  updatingThread->detach();
+  if (!isReady) return false;
+  ALint state;
+  alGetSourcei(source, AL_SOURCE_STATE, &state);
+  return state == AL_STOPPED;
 }
 
-void Player::loadMusic(MusicFile &musicFile)
+void Player::loadMusicFile(MusicFile &musicFile)
 {
   if (isReady) {
       clear();
   }
-
   createSource();
   isReady = true;
-  emit songChanged(currentPlayList->getSong());
 
   alGenBuffers((ALuint)1, &buffer);
   // check for errors
@@ -229,14 +189,11 @@ void Player::loadMusic(MusicFile &musicFile)
   alGetSourcei(source, AL_SOURCE_STATE, &source_state);
   // check for errors
 
-  emit durationChanged(getDurationOfSong());
-  emit positionChanged(0);
-
-  //qDebug() << "Song duration: " << getDurationOfSong();
 }
 
 void Player::_loadNextTrack()
 {
+  if (!isReady) return;
   if(_isLoopedTrack){
       return;
     }
@@ -256,12 +213,16 @@ void Player::_loadNextTrack()
           else return;
         }
     }
-  //qDebug() << name;
-  loadSong(name);
+
+  loadTrack(name);
 }
 
 void Player::_loadPrevTrack()
 {
+  if (!isReady) return;
+  if(_isLoopedTrack){
+      return;
+    }
   QString name;
   if (_isRandTrack){
       name = getRandTrackName();
@@ -277,14 +238,14 @@ void Player::_loadPrevTrack()
         }
     }
   //qDebug() << name;
-  loadSong(name);
+  loadTrack(name);
 }
 
-void Player::loadSong(QString name)
+void Player::loadTrack(QString name)
 {
-  //qDebug() << "Started loading " << name;
-  MusicFile musicFile;
   if (name == "") return;
+  MusicFile musicFile;
+
 
   Decoder::DecodeFile(
         musicFile,
@@ -292,8 +253,7 @@ void Player::loadSong(QString name)
         QString("music/").append(name).toLocal8Bit().data()
         );
 
-  loadMusic(musicFile);
-  //qDebug() << "Ended loading " << name;
+  loadMusicFile(musicFile);
 }
 
 void Player::initOAL()
@@ -305,7 +265,7 @@ void Player::initOAL()
   enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
   if (enumeration == AL_FALSE) {}		// enumeration not supported
   else {}                           		// enumeration supported
-  list_audio_devices(alcGetString(NULL, ALC_DEVICE_SPECIFIER));
+  listAudioDevice(alcGetString(NULL, ALC_DEVICE_SPECIFIER));
   ALCenum error;
 
   error = alGetError();
@@ -368,12 +328,10 @@ void Player::clear()
   alDeleteBuffers(1, &buffer);
 
   isReady = false;
-  emit positionChanged(0);
 }
 
 Player::~Player()
 {
-  updatingThread->~thread();
   this->setPlaylist(NULL);
   deinitOAL();
 }

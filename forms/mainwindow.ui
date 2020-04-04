@@ -390,8 +390,8 @@ background-repeat: none;</string>
         </property>
         <property name="minimumSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>35</width>
+          <height>35</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -421,7 +421,7 @@ background-repeat: none;</string>
         </property>
         <property name="minimumSize">
          <size>
-          <width>200</width>
+          <width>150</width>
           <height>0</height>
          </size>
         </property>

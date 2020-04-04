@@ -5,8 +5,8 @@
 #include <QListWidget>
 #include <QMenu>
 
-#include "playlist.h"
-#include "fileassistant.h"
+#include "global_types/playlist.h"
+#include "static_classes/fileassistant.h"
 
 
 class ListController : public QObject

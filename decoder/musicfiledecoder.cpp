@@ -1,6 +1,7 @@
 #include "musicfiledecoder.h"
-#include "musicfile.h"
 #include <QDebug>
+
+
 int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName)
 {
 	FILE* file;

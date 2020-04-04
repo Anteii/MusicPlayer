@@ -6,8 +6,8 @@
 class Visualization{
 public:
   virtual void init() = 0;
+  virtual void deInit() = 0;
   virtual void update() = 0;
-  virtual void setOGLFunctionPointer(OGLF *) = 0;
 };
 
 #endif // VISUALIZATION_H

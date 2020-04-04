@@ -1,5 +1,5 @@
 #include <complex>
-#include "MusicFile.h"
+#include "global_types/musicfile.h"
 #include <math.h>
 
 double dpi = acos(-1) * 2;
@@ -8,7 +8,7 @@ double getY(MusicFile file, double x, bool isRightChannel) {
 	x *= file.header.sampleRate;
 	if (file.header.bitsPerSample == 8)
 	{
-		char* arr = file.samplesBuffer.arr;
+		short int* arr = file.samplesBuffer.arr;
 		if (file.header.numChannels == 1) return arr[(int)x];
 		else if (isRightChannel) return arr[(int)x * 2 + 1];
 		else return arr[(int)x * 2];

@@ -6,7 +6,8 @@
 #include <QDir>
 #include <QDebug>
 #include <iostream>
-#include "fileassistant.h"
+#include <QRegExp>
+#include "static_classes/fileassistant.h"
 /*
 Playlist file format:
 Just lines including full path to file

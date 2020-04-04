@@ -1,7 +1,44 @@
 #include "graphic.h"
-
+#include <QDebug>
 
 Graphic::Graphic(QWidget *parent) : QOpenGLWidget(parent)
+{
+  initUpdaterThread();
+}
+
+void Graphic::setEffect(Visualization *ef)
+{
+  qDebug() << "SetEffect";
+  effect = ef;
+}
+
+QOpenGLFunctions_4_5_Core *Graphic::getOGLF()
+{
+  return (OGLF*)this;
+}
+
+QOpenGLContext *Graphic::getContext()
+{
+  return context();
+}
+
+void Graphic::initEffect()
+{
+  if (effect != NULL){
+      effect->init();
+    }
+  isInitedEffect = true;
+}
+
+void Graphic::deInitEffect()
+{
+  if (effect != NULL){
+      effect->deInit();
+    }
+  isInitedEffect = false;
+}
+
+void Graphic::initUpdaterThread()
 {
 
 }
@@ -24,12 +61,12 @@ void Graphic::renderText(double x, double y, double z, const QString & str, cons
       textPosY = height - textPosY; // y is inverted
 
       QPainter painter(this);
+
       painter.setPen(Qt::yellow);
       painter.setFont(QFont("Helvetica", 8));
       painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
       painter.drawText(textPosX, textPosY, str); // z = pointT4.z + distOverOp / 4
       painter.end();
-      painter.beginNativePainting();
 }
 
 GLint Graphic::project(GLdouble objx, GLdouble objy, GLdouble objz, const GLdouble model[], const GLdouble proj[], const GLint viewport[], GLdouble *winx, GLdouble *winy, GLdouble *winz)
@@ -74,8 +111,7 @@ void Graphic::transformPoint(GLdouble out[], const GLdouble m[], const GLdouble 
 void Graphic::initializeGL()
 {
   initializeOpenGLFunctions();
-  effect = new OGLTest();
-  effect->init();
+  qDebug() << "Initialize";
 }
 
 void Graphic::resizeGL(int h, int w)
@@ -89,10 +125,15 @@ void Graphic::resizeGL(int h, int w)
 
 void Graphic::paintGL()
 {
-  //renderText(0.5, 0.5, 0, "text");
-  if (effect != NULL) {
+  qDebug() << "paintGL";
+  if (!isInitedEffect && effect != NULL){
+      initEffect();
+    }
+  //renderText(0.5, 0.5, 0.5, QString("asap"));
+  if (isInitedEffect && effect != NULL){
       effect->update();
-  }
+    }
+
 }
 
 

@@ -5,17 +5,19 @@
 #include <QOpenGLFunctions_4_5_Core>
 
 
-class OGLTest : public Visualization, protected QOpenGLFunctions_4_5_Core
+class OGLTest : public Visualization, QOpenGLFunctions_4_5_Core
 {
 public:
-  OGLTest();
+  OGLTest(OGLF * f);
   ~OGLTest();
   void draw();
 
-  void setOGLFunctionPointer(OGLF *) override;
   void init() override;
+  void deInit() override;
   void update() override;
+
 private:
+
   float * points;
   GLuint lst;
   GLuint vbo;
@@ -25,8 +27,6 @@ private:
   GLuint vs;
   GLuint fs;
   GLuint shader_programme;
-  OGLF * func;
-
 };
 
 #endif // OGLTEST_H

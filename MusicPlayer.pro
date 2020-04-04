@@ -16,38 +16,40 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    fileassistant.cpp \
-    graphic.cpp \
-    listcontroller.cpp \
+    controllers/listcontroller.cpp      \
+    controllers/playercontroller.cpp \
+    controllers/timingcontroller.cpp    \
+    controllers/volumecontroller.cpp    \
+    decoder/musicfiledecoder.cpp        \
+    fft/Fourier.cpp                     \
+    forms/mainwindow.cpp                \
+    global_types/playlist.cpp           \
+    graphics/graphic.cpp                \
+    graphics/ogltest.cpp                \
     main.cpp \
-    mainwindow.cpp \
-    musicfiledecoder.cpp \
-    ogltest.cpp \
-    player.cpp \
-    playlist.cpp \
-    styler.cpp \
-    timingcontroller.cpp \
-    volumecontroller.cpp
+    player_core/player.cpp
+
 
 HEADERS += \
-    Visualization.h \
-    fileassistant.h \
-    graphic.h \
-    listcontroller.h \
-    mainwindow.h \
-    musicfile.h \
-    musicfiledecoder.h \
-    ogltest.h \
-    player.h \
-    playlist.h \
-    styler.h \
-    timingcontroller.h \
-    util.h \
-    volumecontroller.h
+    controllers/listcontroller.h        \
+    controllers/playercontroller.h \
+    controllers/timingcontroller.h      \
+    controllers/volumecontroller.h      \
+    decoder/musicfiledecoder.h          \
+    forms/mainwindow.h                  \
+    global_types/musicfile.h            \
+    global_types/playlist.h             \
+    graphics/Visualization.h            \
+    graphics/graphic.h                  \
+    graphics/ogltest.h                  \
+    player_core/player.h \
+    static_classes/fileassistant.h      \
+    static_classes/styler.h \
+    static_classes/util.h
+
 
 FORMS += \
-    form.ui \
-    mainwindow.ui
+    forms/mainwindow.ui
 
 
 # Default rules for deployment.
@@ -65,3 +67,7 @@ DEPENDPATH += $$PWD/dep/openal/include
 RESOURCES += \
     Icos.qrc \
     styles.qrc
+
+DISTFILES += \
+    playlists/playlist1.txt \
+    playlists/run.txt

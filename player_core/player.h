@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <QObject>
 #include <QDebug>
 #include <thread>
 #include <chrono>
@@ -9,31 +8,32 @@
 #include "al.h"
 #include "alc.h"
 
-#include "musicfile.h"
-#include "musicfiledecoder.h"
-#include "playlist.h"
+#include "global_types/musicfile.h"
+#include "decoder/musicfiledecoder.h"
+#include "global_types/playlist.h"
 
 
-class Player : public QObject
+class Player
 {
-  Q_OBJECT
 public:
-  explicit Player(QObject *parent = nullptr);
-
+  Player();
   // get track info
   int getCurrentPosition();
-  int getDurationOfSong();
-  QString getTrackName();
+  int getDurationOfTrack();
+  QString getCurrentTrackName();
   QString getRandTrackName();
 
   // playlist manipulating
-  void setPlaylist(PlayList * pl);
-  PlayList* getPlayList();
+  void setPlaylist(PlayList*);
+  PlayList* getPlaylist();
 
   // player controls
   void start();
+  void playPause();
   void play();
   void pause();
+  void playNextTrack();
+  void playPrevTrack();
   void setTime(int);
   void setLoopedTrack(bool);
   void setLoopedPlaylist(bool);
@@ -41,36 +41,24 @@ public:
   void setVolume(float);
 
   // player properties
-  inline bool isReadyToPlay() { return isReady; }
   bool isPlaying();
+  bool isPaused();
+  bool isStopped();
+  inline bool isReadyToPlay() { return isReady; }
   inline bool isLoopedTrack() { return _isLoopedTrack; }
   inline bool isLoopedPlaylist() { return _isLoopedPlaylist; }
   inline bool isRandTrack() { return _isRandTrack; }
   ~Player();
 
-signals:
-  void positionChanged(int pos);
-  void durationChanged(int duration);
-  void songChanged(QString);
-  void songEnded(void);
 
-public slots:
-  void playPause();
-  void playNextTrack();
-  void playPrevTrack();
 private:
-  // set up connection
-  void makeConnections();
-
-  // set up updating thread
-  void createUpdaterThread();
-
   // low-level controlling
   inline void clear();
-  void loadMusic(MusicFile& musicFile);
+  void loadMusicFile(MusicFile& musicFile);
   void _loadNextTrack();
   void _loadPrevTrack();
-  void loadSong(QString name);
+  void loadTrack(QString name);
+  void listAudioDevice(const ALCchar* devices);
   void initOAL();
   void createSource();
   void createDevice();
@@ -79,7 +67,6 @@ private:
 
   // private properties
   PlayList * currentPlayList = NULL;
-  std::thread * updatingThread = NULL;
   errno_t err;
 
   // playing properties

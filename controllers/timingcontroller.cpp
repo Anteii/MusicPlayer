@@ -1,5 +1,5 @@
 #include "timingcontroller.h"
-
+#include <QDebug>
 TimingController::TimingController(QObject *parent) : QObject(parent)
 {
 
@@ -13,6 +13,7 @@ void TimingController::initSlider(QSlider *slider)
 
 void TimingController::setValue(int val)
 {
+  qDebug() << isCaptured;
   if (isCaptured) return;
   slider->setValue(val);
 }

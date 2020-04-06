@@ -1,7 +1,7 @@
 #include "graphiccontroller.h"
 
 GraphicController::GraphicController(QObject *parent) :
-  QObject(parent), _isInited(false), current(NONE), vis(NULL), graphic(NULL)
+  QObject(parent), _isInited(false), current(NONE), vis(NULL), graphic(NULL), updater(NULL)
 {
   connect(
         this,
@@ -9,6 +9,7 @@ GraphicController::GraphicController(QObject *parent) :
         this,
         SLOT (setVisualization(int))
         );
+  initUpdaterThread();
 }
 
 void GraphicController::init(Graphic * w)
@@ -59,4 +60,20 @@ void GraphicController::setVisualization(int type)
   }
   graphic->update();
   current = (VisualizationTypes)type;
+}
+
+void GraphicController::initUpdaterThread()
+{
+  updater = new std::thread([](int gcPtr){
+      GraphicController * gc = (GraphicController*)gcPtr;
+      Graphic * graphic = gc->graphic;
+      while(true){
+          while(graphic->isInitedEffect()){
+              graphic->update();
+              _sleep(68);
+            }
+          _sleep(17);
+        }
+    }, (int)this);
+  updater->detach();
 }

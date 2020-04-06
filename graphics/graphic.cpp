@@ -1,9 +1,9 @@
 #include "graphic.h"
 
 
-Graphic::Graphic(QWidget *parent) : QOpenGLWidget(parent), _isInited(false)
+Graphic::Graphic(QWidget *parent) :
+  QOpenGLWidget(parent), effect(NULL), _isInited(false), _isInitedEffect(false)
 {
-  initUpdaterThread();
 }
 
 void Graphic::setEffect(Visualization *ef)
@@ -11,24 +11,22 @@ void Graphic::setEffect(Visualization *ef)
   effect = ef;
 }
 
-QOpenGLFunctions_4_3_Core *Graphic::getOGLF()
+OGLF* Graphic::getOGLF()
 {
   return (OGLF*)this;
 }
 
-QOpenGLContext *Graphic::getContext()
+QOpenGLContext* Graphic::getContext()
 {
   return context();
 }
 
 void Graphic::initEffect()
 {
-  qDebug() << "efinited";
-
   if (effect != NULL){
       effect->init();
     }
-  isInitedEffect = true;
+  _isInitedEffect = true;
 }
 
 void Graphic::deInitEffect()
@@ -36,7 +34,7 @@ void Graphic::deInitEffect()
   if (effect != NULL){
       effect->deInit();
     }
-  isInitedEffect = false;
+  _isInitedEffect = false;
 }
 
 bool Graphic::isInited()
@@ -44,9 +42,9 @@ bool Graphic::isInited()
   return _isInited;
 }
 
-void Graphic::initUpdaterThread()
+bool Graphic::isInitedEffect()
 {
-
+  return _isInitedEffect;
 }
 
 void Graphic::renderText(double x, double y, double z, const QString & str, const QFont & font = QFont(), int listBase = 2000)
@@ -136,18 +134,28 @@ void Graphic::paintGL()
 {
   qDebug() << "paintGL";
   //renderText(0.5, 0.5, 0.5, QString("asap"));
-  if (isInitedEffect && effect != NULL){
+  if (_isInitedEffect){
       effect->update();
     }
 
-  glColor3f(1, 0, 0);
+
   for(int i = 0; i < 20; i++){
       glBegin(GL_TRIANGLES);
+      glColor3f(
+            (float)std::rand() / RAND_MAX,
+            (float)std::rand() / RAND_MAX,
+            (float)std::rand() / RAND_MAX
+            );
           glVertex3f((i-10.0)/10, -1, 0);
           glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
           glVertex3f((i-10.0 + 0.9)/10, -1, 0);
       glEnd();
       glBegin(GL_TRIANGLES);
+      glColor3f(
+            (float)std::rand() / RAND_MAX,
+            (float)std::rand() / RAND_MAX,
+            (float)std::rand() / RAND_MAX
+            );
           glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
           glVertex3f((i-10.0)/10, -1, 0);
           glVertex3f((i-10.0)/10, -0.9, 0);

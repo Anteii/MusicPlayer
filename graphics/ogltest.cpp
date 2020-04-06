@@ -77,8 +77,8 @@ void OGLTest::draw()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glLinkProgram(shader_programme);
-  glUseProgram(shader_programme);
+  //glLinkProgram(shader_programme);
+  //glUseProgram(shader_programme);
 
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);

@@ -25,10 +25,12 @@ public slots:
 signals:
   void changeVisualization(int);
 private:
+  void initUpdaterThread();
   bool _isInited;
   VisualizationTypes current;
   Visualization * vis;
   Graphic * graphic;
+  std::thread * updater;
 };
 
 #endif // GRAPHICCONTROLLER_H

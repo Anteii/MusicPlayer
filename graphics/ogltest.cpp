@@ -75,7 +75,6 @@ void OGLTest::update()
 
 void OGLTest::draw()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //glLinkProgram(shader_programme);
   //glUseProgram(shader_programme);
@@ -86,4 +85,7 @@ void OGLTest::draw()
 
   glBindVertexArray(vao);
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  glDisableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

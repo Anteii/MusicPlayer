@@ -133,12 +133,12 @@ void Graphic::resizeGL(int h, int w)
 void Graphic::paintGL()
 {
   qDebug() << "paintGL";
-  //renderText(0.5, 0.5, 0.5, QString("asap"));
+
   if (_isInitedEffect){
       effect->update();
     }
 
-
+renderText(0.5, 0.5, 0.5, QString("asap"));
   for(int i = 0; i < 20; i++){
       glBegin(GL_TRIANGLES);
       glColor3f(

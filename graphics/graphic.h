@@ -43,6 +43,7 @@ protected:
 signals:
 
 private:
+  QPainter * _painter;
   bool _isInited;
   bool _isInitedEffect;
 };

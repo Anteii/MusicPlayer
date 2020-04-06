@@ -28,6 +28,7 @@ void MainWindow::init()
 
   initPlayer();
   initPlayerController();
+  initGraphicController();
   initList();
   initTimingController();
   initVolumeController();
@@ -37,6 +38,7 @@ void MainWindow::init()
   this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/mainWindow.png"));
   this->setWindowTitle("MEGAPLAYER");
   //ui->openGLWidget->setEffect(new OGLTest(ui->openGLWidget->getOGLF()));
+  graphicController->setVisualization(GraphicController::TEST);
   initStyles();
 }
 
@@ -92,8 +94,14 @@ void MainWindow::initStyles()
 
 void MainWindow::initVolumeController()
 {
-  volumeController = new VolumeController;
+  volumeController = new VolumeController(this);
   volumeController->init(ui->volumeSlider);
+}
+
+void MainWindow::initGraphicController()
+{
+  graphicController = new GraphicController(this);
+  graphicController->init(ui->openGLWidget);
 }
 
 void MainWindow::makeConnections()
@@ -234,8 +242,9 @@ void MainWindow::makeConnections()
 
 void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-    ui->openGLWidget->setEffect(new OGLTest(ui->openGLWidget->getOGLF()));
-
+    qDebug() << ui->openGLWidget->getOGLF();
+    //ui->openGLWidget->setEffect(new OGLTest((OGLF*)ui->openGLWidget));
+    //graphicController->setVisualisation(GraphicController::TEST);
     QString type = item->data(Qt::UserRole).toString();
     QString text = item->text();
 

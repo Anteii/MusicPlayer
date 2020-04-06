@@ -1,14 +1,13 @@
 #include "graphic.h"
-#include <QDebug>
 
-Graphic::Graphic(QWidget *parent) : QOpenGLWidget(parent)
+
+Graphic::Graphic(QWidget *parent) : QOpenGLWidget(parent), _isInited(false)
 {
   initUpdaterThread();
 }
 
 void Graphic::setEffect(Visualization *ef)
 {
-  qDebug() << "SetEffect";
   effect = ef;
 }
 
@@ -24,6 +23,8 @@ QOpenGLContext *Graphic::getContext()
 
 void Graphic::initEffect()
 {
+  qDebug() << "efinited";
+
   if (effect != NULL){
       effect->init();
     }
@@ -36,6 +37,11 @@ void Graphic::deInitEffect()
       effect->deInit();
     }
   isInitedEffect = false;
+}
+
+bool Graphic::isInited()
+{
+  return _isInited;
 }
 
 void Graphic::initUpdaterThread()
@@ -110,13 +116,15 @@ void Graphic::transformPoint(GLdouble out[], const GLdouble m[], const GLdouble 
 
 void Graphic::initializeGL()
 {
+
   initializeOpenGLFunctions();
-  create();
   qDebug() << "Initialize";
+  _isInited = true;
 }
 
 void Graphic::resizeGL(int h, int w)
 {
+  qDebug()<<89;
   glViewport(0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -127,9 +135,6 @@ void Graphic::resizeGL(int h, int w)
 void Graphic::paintGL()
 {
   qDebug() << "paintGL";
-  if (!isInitedEffect && effect != NULL){
-      initEffect();
-    }
   //renderText(0.5, 0.5, 0.5, QString("asap"));
   if (isInitedEffect && effect != NULL){
       effect->update();

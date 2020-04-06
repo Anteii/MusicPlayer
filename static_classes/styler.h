@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QSlider>
 #include <QString>
+
 #include "fileassistant.h"
 
 

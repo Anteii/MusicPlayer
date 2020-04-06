@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-OGLTest::OGLTest(OGLF * f) : QOpenGLFunctions_4_3_Core(*f)
+OGLTest::OGLTest(OGLF * f) : Visualization(f)
 {
   //initializeOpenGLFunctions();
   points = new float[9]{
@@ -38,6 +38,7 @@ OGLTest::~OGLTest()
 
 void OGLTest::init()
 {
+
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);

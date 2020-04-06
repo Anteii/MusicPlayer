@@ -5,8 +5,8 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
-#include <iostream>
 #include <QRegExp>
+
 #include "static_classes/fileassistant.h"
 /*
 Playlist file format:
@@ -25,12 +25,12 @@ public:
   QString getPrevSong();
   QString getSong();
   QList<QString>* getSongList();
-
+  QString getREPFileName();
   void toFirstSong();
   void toLastSong();
   void setPosition(int index);
   void setSong(QString);
-  static void createPlaylist(QString name, PlayList * pl){
+  static void createPlaylist(QString const & name, PlayList * pl){
     QFile file(FileAssistant::getPlaylistsPath() + "/" + name + ".txt");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
@@ -63,6 +63,7 @@ public:
 private:
   PlayList();
   QList<QString> * list;
+  QString supportedFormats[2] = {QString("wav"), QString("mp3")};
   int currentSong;
 };
 

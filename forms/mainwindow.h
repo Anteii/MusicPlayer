@@ -10,6 +10,7 @@
 #include "controllers/timingcontroller.h"
 #include "controllers/volumecontroller.h"
 #include "controllers/playercontroller.h"
+#include "controllers/graphiccontroller.h"
 #include "player_core/player.h"
 
 QT_BEGIN_NAMESPACE
@@ -37,6 +38,7 @@ private:
   void initFA();
   void initStyles();
   void initVolumeController();
+  void initGraphicController();
   void makeConnections();
 
   FileAssistant * fileAssistance = NULL;
@@ -45,5 +47,6 @@ private:
   TimingController * timingController = NULL;
   VolumeController * volumeController = NULL;
   PlayerController * playerController = NULL;
+  GraphicController * graphicController = NULL;
 };
 #endif // MAINWINDOW_H

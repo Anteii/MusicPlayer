@@ -13,7 +13,6 @@ void TimingController::initSlider(QSlider *slider)
 
 void TimingController::setValue(int val)
 {
-  qDebug() << isCaptured;
   if (isCaptured) return;
   slider->setValue(val);
 }

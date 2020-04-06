@@ -4,8 +4,9 @@
 #include <QWidget>
 #include <QOpenGLWidget>
 #include <QPainter>
+#include <QDebug>
 #include <thread>
-#include "Visualization.h"
+
 #include "ogltest.h"
 
 // Baisc class wich will be containing different visualisations
@@ -20,7 +21,7 @@ public:
   QOpenGLContext * getContext();
   void initEffect();
   void deInitEffect();
-
+  bool isInited();
 private:
   boolean isInitedEffect = false;
   void initUpdaterThread();
@@ -40,7 +41,8 @@ protected:
   void paintGL() override;
 
 signals:
-
+private:
+  bool _isInited;
 };
 
 #endif // GRAPHIC_H

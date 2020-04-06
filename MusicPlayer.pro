@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    controllers/graphiccontroller.cpp \
     controllers/listcontroller.cpp      \
     controllers/playercontroller.cpp \
     controllers/timingcontroller.cpp    \
@@ -24,6 +25,7 @@ SOURCES += \
     fft/Fourier.cpp                     \
     forms/mainwindow.cpp                \
     global_types/playlist.cpp           \
+    global_types/trackfile.cpp \
     graphics/graphic.cpp                \
     graphics/ogltest.cpp                \
     main.cpp \
@@ -31,6 +33,7 @@ SOURCES += \
 
 
 HEADERS += \
+    controllers/graphiccontroller.h \
     controllers/listcontroller.h        \
     controllers/playercontroller.h \
     controllers/timingcontroller.h      \
@@ -39,9 +42,10 @@ HEADERS += \
     forms/mainwindow.h                  \
     global_types/musicfile.h            \
     global_types/playlist.h             \
-    graphics/Visualization.h            \
+    global_types/trackfile.h \
     graphics/graphic.h                  \
     graphics/ogltest.h                  \
+    graphics/visualization.h \
     player_core/player.h \
     static_classes/fileassistant.h      \
     static_classes/styler.h \

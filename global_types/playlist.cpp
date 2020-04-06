@@ -4,7 +4,7 @@
 PlayList::PlayList(QDir & dir) : PlayList()
 {
   QStringList names = dir.entryList();
-  QRegExp rx(".+\.(wav|mp3)");
+  QRegExp rx(getREPFileName());
   foreach(QString str, names){
       if (rx.exactMatch(str) && !list->contains(str)){
         list->push_back(str);
@@ -19,7 +19,7 @@ PlayList::PlayList(QFile &  file) : PlayList()
   QTextStream st(&file);
   st.setCodec("UTF-8");
   QString str;
-  QRegExp rx(".+\.(wav|mp3)");
+  QRegExp rx(getREPFileName());
   while (st.readLineInto(&str)) {
       if (rx.exactMatch(str) && !list->contains(str)){
         list->push_back(str);
@@ -104,6 +104,18 @@ PlayList *PlayList::clone()
 QList<QString> *PlayList::getSongList()
 {
   return list;
+}
+
+QString PlayList::getREPFileName()
+{
+  QString formatsGroup("");
+  for (QString format : supportedFormats){
+      formatsGroup.append(format).append("|");
+    }
+  if (formatsGroup.at(formatsGroup.length() - 1) == "|"){
+      formatsGroup.replace(formatsGroup.length() - 1, 1, "");
+    }
+  return QString(".+\.(").append(formatsGroup).append(")");
 }
 
 bool PlayList::operator==(const PlayList & pl) const

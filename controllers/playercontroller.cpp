@@ -33,7 +33,7 @@ void PlayerController::initUpdater()
               pos = player->getCurrentPosition();
               emit pc->trackPositionChanged(pos);
               std::this_thread::sleep_for(std::chrono::milliseconds(10));
-              qDebug() << "playing";
+              //qDebug() << "playing";
             }
           //qDebug() << "iteration sdox " << state;
           if (player->isStopped()){

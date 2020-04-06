@@ -1,10 +1,10 @@
 #ifndef OGLTEST_H
 #define OGLTEST_H
 
-#include "Visualization.h"
+#include "visualization.h"
 
 
-class OGLTest : public Visualization, QOpenGLFunctions_4_3_Core
+class OGLTest : public Visualization
 {
 public:
   OGLTest(OGLF * f);

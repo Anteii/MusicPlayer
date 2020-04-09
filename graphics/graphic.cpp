@@ -29,6 +29,13 @@ void Graphic::initEffect()
   _isInitedEffect = true;
 }
 
+void Graphic::updateMusicFile(MusicFile *musicFile)
+{
+  if (_isInited && _isInitedEffect){
+      effect->setMusicFile(musicFile);
+    }
+}
+
 void Graphic::deInitEffect()
 {
   if (effect != NULL){
@@ -122,7 +129,7 @@ void Graphic::initializeGL()
 
 void Graphic::resizeGL(int h, int w)
 {
-  qDebug()<<89;
+  qDebug()<<"resize";
   glViewport(0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -132,13 +139,12 @@ void Graphic::resizeGL(int h, int w)
 
 void Graphic::paintGL()
 {
-  qDebug() << "paintGL";
 
   if (_isInitedEffect){
       effect->update();
     }
 
-renderText(0.5, 0.5, 0.5, QString("asap"));
+renderText(0.5, 0.5, 0.5, QString("ZAEBIS DISCKO"));
   for(int i = 0; i < 20; i++){
       glBegin(GL_TRIANGLES);
       glColor3f(

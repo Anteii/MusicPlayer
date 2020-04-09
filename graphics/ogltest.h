@@ -3,7 +3,6 @@
 
 #include "visualization.h"
 
-
 class OGLTest : public Visualization
 {
 public:
@@ -14,6 +13,7 @@ public:
   void init() override;
   void deInit() override;
   void update() override;
+  void setMusicFile(MusicFile* musicFile) override;
 
 private:
 
@@ -26,6 +26,8 @@ private:
   GLuint vs;
   GLuint fs;
   GLuint shader_programme;
+
+  MusicFile * mf;
 };
 
 #endif // OGLTEST_H

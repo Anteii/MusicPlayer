@@ -225,6 +225,12 @@ void MainWindow::makeConnections()
         playerController,
         &PlayerController::setVolume
         );
+  connect(
+        playerController,
+        &PlayerController::trackChanged,
+        [&](){
+      graphicController->setMusicFile( playerController->getMusicFile() );
+    });
   // positionChanged player -> update label-timer
   connect(
         this->playerController,

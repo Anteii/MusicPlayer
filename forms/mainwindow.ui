@@ -521,6 +521,7 @@ border-radius: 4px;
     <property name="title">
      <string>Settings</string>
     </property>
+    <addaction name="actionVisualization_settings"/>
    </widget>
    <addaction name="menuSettings"/>
    <addaction name="menuEqualizer"/>
@@ -534,6 +535,11 @@ border-radius: 4px;
     </sizepolicy>
    </property>
   </widget>
+  <action name="actionVisualization_settings">
+   <property name="text">
+    <string>Visualization settings</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

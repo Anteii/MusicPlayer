@@ -35,8 +35,9 @@ void PlayerController::initUpdater()
               std::this_thread::sleep_for(std::chrono::milliseconds(10));
               //qDebug() << "playing";
             }
-          //qDebug() << "iteration sdox " << state;
+          qDebug() << "iteration sdox ";
           if (player->isStopped()){
+
               pc->playNextTrack();
               qDebug() << "next";
             }
@@ -44,6 +45,11 @@ void PlayerController::initUpdater()
     }, player, this);
 
   updater->detach();
+}
+
+MusicFile *PlayerController::getMusicFile()
+{
+  return player->getMusicFile();
 }
 
 PlayerController::~PlayerController()
@@ -65,7 +71,7 @@ void PlayerController::start()
   emit trackChanged();
 }
 
-void PlayerController::setVolume(int v)
+void PlayerController::setVolume(float v)
 {
   player->setVolume(v);
 }

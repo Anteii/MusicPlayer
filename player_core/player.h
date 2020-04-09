@@ -12,7 +12,27 @@
 #include "decoder/musicfiledecoder.h"
 #include "global_types/playlist.h"
 
-
+/*!
+* @brief Basic music player class
+*
+* Uses cross-platform OpenAL library.
+*
+* Supported formats:
+*   - WAV
+*
+* Support basic controlls:
+*   - Play / pause
+*   - Play next / previous track
+*   - Set current time
+*   - Make track looped or random selected
+*   - Make playlist looped
+*   - Volume control
+*
+* To control music streaming flow use playlists.
+*
+* @see playlist.h
+* @see musicfiledecoder.h
+*/
 class Player
 {
 public:
@@ -22,6 +42,7 @@ public:
   int getDurationOfTrack();
   QString getCurrentTrackName();
   QString getRandTrackName();
+  MusicFile * getMusicFile();
 
   // playlist manipulating
   void setPlaylist(PlayList*);
@@ -67,6 +88,7 @@ private:
 
   // private properties
   PlayList * currentPlayList = NULL;
+  MusicFile * musicFile = NULL;
   errno_t err;
 
   // playing properties
@@ -78,7 +100,6 @@ private:
   ALfloat _volume = ALfloat(1);
 
   // OpenAL variables
-  MusicFile * musicFile = NULL;
   ALCcontext* context = NULL;
   ALuint source;
   ALuint buffer;

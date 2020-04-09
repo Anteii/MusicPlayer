@@ -62,6 +62,14 @@ void GraphicController::setVisualization(int type)
   current = (VisualizationTypes)type;
 }
 
+void GraphicController::setMusicFile(MusicFile * musicFile)
+{
+  if (this->musicFile != NULL) delete musicFile;
+  this->musicFile = musicFile;
+  graphic->updateMusicFile(musicFile);
+  qDebug() << "musicFile";
+}
+
 void GraphicController::initUpdaterThread()
 {
   updater = new std::thread([](int gcPtr){

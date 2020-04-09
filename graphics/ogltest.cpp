@@ -2,7 +2,7 @@
 #include <QDebug>
 
 
-OGLTest::OGLTest(OGLF * f) : Visualization(f)
+OGLTest::OGLTest(OGLF * f) : Visualization(f), mf(NULL)
 {
   //initializeOpenGLFunctions();
   points = new float[9]{
@@ -71,6 +71,12 @@ void OGLTest::deInit()
 void OGLTest::update()
 {
   draw();
+}
+
+void OGLTest::setMusicFile(MusicFile* musicFile)
+{
+  mf = musicFile;
+  qDebug() << "Pointer: " << mf;
 }
 
 void OGLTest::draw()

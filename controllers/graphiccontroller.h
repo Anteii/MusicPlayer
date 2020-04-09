@@ -4,6 +4,7 @@
 #include <QOpenGLWidget>
 #include <QString>
 #include <thread>
+#include "global_types/musicfile.h"
 #include "graphics/graphic.h"
 #include "graphics/Visualization.h"
 #include "graphics/ogltest.h"
@@ -22,6 +23,7 @@ public:
   void delaySet(VisualizationTypes type);
 public slots:
   void setVisualization(int);
+  void setMusicFile(MusicFile*);
 signals:
   void changeVisualization(int);
 private:
@@ -31,6 +33,7 @@ private:
   Visualization * vis;
   Graphic * graphic;
   std::thread * updater;
+  MusicFile * musicFile;
 };
 
 #endif // GRAPHICCONTROLLER_H

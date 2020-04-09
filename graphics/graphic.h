@@ -21,6 +21,7 @@ public:
 
   void setEffect(Visualization * ef);
   void initEffect();
+  void updateMusicFile(MusicFile * musicFile);
   void deInitEffect();
   bool isInited();
   bool isInitedEffect();

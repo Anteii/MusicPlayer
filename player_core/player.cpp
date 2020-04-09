@@ -67,6 +67,11 @@ QString Player::getRandTrackName()
   return currentPlayList->getSong();
 }
 
+MusicFile *Player::getMusicFile()
+{
+  return musicFile;
+}
+
 void Player::setPlaylist(PlayList * pl)
 {
   if (currentPlayList != NULL) delete currentPlayList;
@@ -90,17 +95,15 @@ void Player::playPause(){
 void Player::playNextTrack()
 {
   if (!isReady) return;
-  bool flag = isPlaying();
   _loadNextTrack();
-  if (flag) play();
+  play();
 }
 
 void Player::playPrevTrack()
 {
   if (!isReady) return;
-  bool flag = isPlaying();
   _loadPrevTrack();
-  if (flag) play();
+  play();
 }
 
 void Player::play()
@@ -188,7 +191,7 @@ void Player::loadMusicFile(MusicFile &musicFile)
   ALint source_state;
   alGetSourcei(source, AL_SOURCE_STATE, &source_state);
   // check for errors
-
+  this->musicFile = &musicFile;
 }
 
 void Player::_loadNextTrack()
@@ -244,16 +247,16 @@ void Player::_loadPrevTrack()
 void Player::loadTrack(QString name)
 {
   if (name == "") return;
-  MusicFile musicFile;
+  MusicFile* musicFile = new MusicFile;
 
 
   Decoder::DecodeFile(
-        musicFile,
+        *musicFile,
         err,
         QString("music/").append(name).toLocal8Bit().data()
         );
 
-  loadMusicFile(musicFile);
+  loadMusicFile(*musicFile);
 }
 
 void Player::initOAL()

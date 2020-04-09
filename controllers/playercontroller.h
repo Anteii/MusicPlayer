@@ -13,8 +13,7 @@ public:
   explicit PlayerController(QObject *parent = nullptr);
   void initPlayer(Player * player);
   void initUpdater();
-
-
+  MusicFile * getMusicFile();
   ~PlayerController();
 
 signals:
@@ -26,7 +25,7 @@ signals:
 public slots:
   void setTime(int);
   void start();
-  void setVolume(int);
+  void setVolume(float);
   void playPause();
   void playNextTrack();
   void playPrevTrack();

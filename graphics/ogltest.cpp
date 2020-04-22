@@ -79,6 +79,12 @@ void OGLTest::setMusicFile(MusicFile* musicFile)
   qDebug() << "Pointer: " << mf;
 }
 
+void OGLTest::setPlayer(Player *pl)
+{
+  player = pl;
+  qDebug() << pl->isRandTrack();
+}
+
 void OGLTest::draw()
 {
 

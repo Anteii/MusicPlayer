@@ -24,6 +24,7 @@ QOpenGLContext* Graphic::getContext()
 void Graphic::initEffect()
 {
   if (effect != NULL){
+      effect->setPlayer(player);
       effect->init();
     }
   _isInitedEffect = true;
@@ -34,6 +35,11 @@ void Graphic::updateMusicFile(MusicFile *musicFile)
   if (_isInited && _isInitedEffect){
       effect->setMusicFile(musicFile);
     }
+}
+
+void Graphic::setPlayer(Player *pl)
+{
+  player = pl;
 }
 
 void Graphic::deInitEffect()

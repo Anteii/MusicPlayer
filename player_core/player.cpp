@@ -191,6 +191,7 @@ void Player::loadMusicFile(MusicFile &musicFile)
   ALint source_state;
   alGetSourcei(source, AL_SOURCE_STATE, &source_state);
   // check for errors
+  if (this->musicFile != NULL) delete this->musicFile;
   this->musicFile = &musicFile;
 }
 

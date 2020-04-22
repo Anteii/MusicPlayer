@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <thread>
 
+#include <player_core/player.h>
+
 #include "ogltest.h"
 
 // Baisc class wich will be containing different visualisations
@@ -22,6 +24,7 @@ public:
   void setEffect(Visualization * ef);
   void initEffect();
   void updateMusicFile(MusicFile * musicFile);
+  void setPlayer(Player * pl);
   void deInitEffect();
   bool isInited();
   bool isInitedEffect();
@@ -47,6 +50,7 @@ private:
   QPainter * _painter;
   bool _isInited;
   bool _isInitedEffect;
+  Player * player;
 };
 
 #endif // GRAPHIC_H

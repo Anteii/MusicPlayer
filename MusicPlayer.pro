@@ -68,6 +68,9 @@ LIBS += -lopengl32
 INCLUDEPATH += $$PWD/dep/openal/include
 DEPENDPATH += $$PWD/dep/openal/include
 
+INCLUDEPATH += $$PWD/dep/mpg123
+DEPENDPATH += $$PWD/dep/mpg123
+LIBS += $$PWD/dep/mpg123/libmpg123-0.dll
 RESOURCES += \
     Icos.qrc \
     styles.qrc

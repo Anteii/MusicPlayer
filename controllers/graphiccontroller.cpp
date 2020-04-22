@@ -64,10 +64,14 @@ void GraphicController::setVisualization(int type)
 
 void GraphicController::setMusicFile(MusicFile * musicFile)
 {
-  if (this->musicFile != NULL) delete musicFile;
   this->musicFile = musicFile;
   graphic->updateMusicFile(musicFile);
   qDebug() << "musicFile";
+}
+
+void GraphicController::setPlayer(Player *pl)
+{
+  graphic->setPlayer(pl);
 }
 
 void GraphicController::initUpdaterThread()

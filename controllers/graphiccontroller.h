@@ -24,6 +24,7 @@ public:
 public slots:
   void setVisualization(int);
   void setMusicFile(MusicFile*);
+  void setPlayer(Player * pl);
 signals:
   void changeVisualization(int);
 private:

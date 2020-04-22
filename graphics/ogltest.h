@@ -14,7 +14,7 @@ public:
   void deInit() override;
   void update() override;
   void setMusicFile(MusicFile* musicFile) override;
-
+  void setPlayer(Player *pl) override;
 private:
 
   float * points;
@@ -26,7 +26,7 @@ private:
   GLuint vs;
   GLuint fs;
   GLuint shader_programme;
-
+  Player * player;
   MusicFile * mf;
 };
 

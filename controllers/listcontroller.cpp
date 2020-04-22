@@ -104,7 +104,7 @@ void ListController::createItem(QString name, QString type, QString icoPath)
 {
   if(!isInited) return;
   QListWidgetItem * tempit = new QListWidgetItem;
-  tempit = new QListWidgetItem;
+  //tempit = new QListWidgetItem;
   tempit->setText(name);
   tempit->setData(Qt::UserRole, QVariant(type));
   if (icoPath != 0){

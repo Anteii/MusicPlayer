@@ -92,7 +92,6 @@ private:
   errno_t err;
 
   // playing properties
-  bool isReplay = false;
   bool isReady = false;
   bool _isRandTrack = false;
   bool _isLoopedTrack = false;

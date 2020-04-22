@@ -102,6 +102,7 @@ void MainWindow::initGraphicController()
 {
   graphicController = new GraphicController(this);
   graphicController->init(ui->openGLWidget);
+  graphicController->setPlayer(player);
 }
 
 void MainWindow::makeConnections()
@@ -230,6 +231,7 @@ void MainWindow::makeConnections()
         &PlayerController::trackChanged,
         [&](){
       graphicController->setMusicFile( playerController->getMusicFile() );
+
     });
   // positionChanged player -> update label-timer
   connect(

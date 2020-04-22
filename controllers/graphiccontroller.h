@@ -8,13 +8,14 @@
 #include "graphics/graphic.h"
 #include "graphics/Visualization.h"
 #include "graphics/ogltest.h"
+#include "fft/FourierDraw.h"
 
 class GraphicController : public QObject
 {
   Q_OBJECT
 public:
   enum VisualizationTypes{
-    NONE, TEST
+    NONE, TEST, FIRST
   };
 
   explicit GraphicController(QObject *parent = nullptr);

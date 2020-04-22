@@ -54,8 +54,13 @@ void GraphicController::setVisualization(int type)
       vis = new OGLTest((OGLF*)graphic);
       graphic->setEffect(vis);
       graphic->initEffect();
-
     break;
+
+  case FIRST:
+    vis = new FourierDraw((OGLF*)graphic);
+    graphic->setEffect(vis);
+    graphic->initEffect();
+  break;
 
   }
   graphic->update();

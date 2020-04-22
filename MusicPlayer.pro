@@ -39,6 +39,7 @@ HEADERS += \
     controllers/timingcontroller.h      \
     controllers/volumecontroller.h      \
     decoder/musicfiledecoder.h          \
+    fft/FourierDraw.h \
     forms/mainwindow.h                  \
     global_types/musicfile.h            \
     global_types/playlist.h             \
@@ -76,5 +77,7 @@ RESOURCES += \
     styles.qrc
 
 DISTFILES += \
+    fft/SimpleFragmentShader.frag \
+    fft/SimpleVertexShader.vert \
     playlists/playlist1.txt \
     playlists/run.txt

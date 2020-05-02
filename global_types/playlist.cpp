@@ -112,6 +112,7 @@ QString PlayList::getREPFileName()
   for (QString format : supportedFormats){
       formatsGroup.append(format).append("|");
     }
+  formatsGroup.remove(formatsGroup.lastIndexOf('|'), 1);
   if (formatsGroup.at(formatsGroup.length() - 1) == "|"){
       formatsGroup.replace(formatsGroup.length() - 1, 1, "");
     }

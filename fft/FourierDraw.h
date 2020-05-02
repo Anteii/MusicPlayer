@@ -12,7 +12,8 @@
 
 class FourierDraw : public Visualization {
     double const dpi = acos(-1) * 2;
-    MusicFile* file;
+    TrackFile* tfile;
+    PlayerController * pc;
     Player *player;
     GLuint programID;
     GLuint VertexArrayID;
@@ -23,12 +24,12 @@ public:
     void init() override;
     void deInit() override;
     void update() override;
-    void setMusicFile(MusicFile* f) override;
-    void setPlayer(Player *pl) override;
+    void setPlayerController(PlayerController *ctr) override;
 private:
     double getY(double x, bool isRightChannel);
     double integral(double a, double freq, bool isRightChannel);
     double* GetFrame(double x, int count);
     GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
     double Normalize(double x);
+    OGLF * f;
 };

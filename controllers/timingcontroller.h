@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSlider>
-
+#include "logger/logger.h"
 
 class TimingController : public QObject
 {
@@ -11,7 +11,7 @@ class TimingController : public QObject
 public:
   explicit TimingController(QObject *parent = nullptr);
   void initSlider(QSlider * list);
-
+  void setLogger(Logger * _logger);
 signals:
   void sliderPosChanged(int);
 public slots:
@@ -22,6 +22,7 @@ private:
   bool isCaptured = false;
   bool isInited = false;
   QSlider* slider;
+  Logger * logger = NULL;
 };
 
 #endif // TIMINGCONTROLLER_H

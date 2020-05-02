@@ -7,7 +7,7 @@
 
 #include "global_types/playlist.h"
 #include "static_classes/fileassistant.h"
-
+#include "logger/logger.h"
 
 class ListController : public QObject
 {
@@ -17,7 +17,7 @@ public:
     PLAYLISTS, TRACKS
   };
   explicit ListController(QObject *parent = nullptr);
-
+  ~ListController();
   void initList(QListWidget * list);
 
   void addTrack(QString name);
@@ -30,14 +30,14 @@ public:
   void loadPlaylists();
 
   void setPlaylist(PlayList *);
-
+  void setLogger(Logger * _logger);
   contentType whatDisplays();
   PlayList * getPlayList();
 
 private:
 
   void createItem(QString name, QString contentType, QString icoPath = "");
-
+  Logger * logger = NULL;
   bool isInited = false;
   contentType _whatDisplays = PLAYLISTS;
 

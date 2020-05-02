@@ -9,7 +9,8 @@
 #include "graphics/Visualization.h"
 #include "graphics/ogltest.h"
 #include "fft/FourierDraw.h"
-
+#include "logger/logger.h"
+#define logger_name logger
 class GraphicController : public QObject
 {
   Q_OBJECT
@@ -22,20 +23,29 @@ public:
   void init(Graphic *);
   bool isInited();
   void delaySet(VisualizationTypes type);
+  void setLogger(Logger * _logger);
+  void handleChangedTrack();
+  ~GraphicController();
 public slots:
   void setVisualization(int);
-  void setMusicFile(MusicFile*);
-  void setPlayer(Player * pl);
+  void setPlayerController(PlayerController * pc);
 signals:
   void changeVisualization(int);
 private:
+  void _setVisualization(int type);
+  int nextVisType = 0;
   void initUpdaterThread();
+  Logger * logger = NULL;
   bool _isInited;
+  bool synchronizedFlag= false;
+  bool trackChanging = false;
+  bool _shutDown = false;
+  bool _updaterIsRunning = true;
   VisualizationTypes current;
   Visualization * vis;
   Graphic * graphic;
   std::thread * updater;
-  MusicFile * musicFile;
+  PlayerController * playerController = NULL;
 };
 
 #endif // GRAPHICCONTROLLER_H

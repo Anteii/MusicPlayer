@@ -11,7 +11,12 @@ void VolumeController::init(QSlider * slider)
   isInited = true;
 }
 
-void VolumeController::sliderPosChanged(int val)
+void VolumeController::setVolume(int val)
 {
-  emit volumeSet( ((float)val) / 100);
+  emit volumeChanged( ((float)val) / 100);
+}
+
+void VolumeController::setLogger(Logger *_logger)
+{
+  logger = _logger;
 }

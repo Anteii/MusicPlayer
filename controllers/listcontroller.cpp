@@ -6,6 +6,11 @@ ListController::ListController(QObject *parent) : QObject(parent)
 
 }
 
+ListController::~ListController()
+{
+  delete currentPlayList;
+}
+
 void ListController::initList(QListWidget * list)
 {
   // save pointer to list
@@ -63,6 +68,11 @@ void ListController::setPlaylist(PlayList * pl)
 {
   if (currentPlayList != NULL) delete currentPlayList;
   currentPlayList = pl;
+}
+
+void ListController::setLogger(Logger *_logger)
+{
+  logger = _logger;
 }
 
 ListController::contentType ListController::whatDisplays()

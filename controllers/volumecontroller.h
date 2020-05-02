@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QSlider>
-
+#include "logger/logger.h"
 
 class VolumeController : public QObject
 {
@@ -11,12 +11,14 @@ class VolumeController : public QObject
 public:
   explicit VolumeController(QObject *parent = nullptr);
   void init(QSlider *);
-  void sliderPosChanged(int);
+  void setVolume(int);
+  void setLogger(Logger * _logger);
 private:
   bool isInited = false;
   QSlider * slider = NULL;
+  Logger * logger = NULL;
 signals:
-  void volumeSet(float);
+  void volumeChanged(float);
 };
 
 #endif // VOLUMECONTROLLER_H

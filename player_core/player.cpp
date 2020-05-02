@@ -2,7 +2,8 @@
 
 void Player::listAudioDevice(const ALCchar* devices)
 {
-	const ALCchar* device = devices, * next = devices + 1;
+	const ALCchar* device = devices;
+	const ALCchar* next = devices + 1;
 	size_t len = 0;
 
 	fprintf(stdout, "Devices list:\n");
@@ -18,6 +19,7 @@ void Player::listAudioDevice(const ALCchar* devices)
 
 Player::Player()
 {
+  decoder = new MusicFileDecoder;
   initOAL();
 }
 
@@ -67,9 +69,9 @@ QString Player::getRandTrackName()
   return currentPlayList->getSong();
 }
 
-MusicFile *Player::getMusicFile()
+TrackFile *Player::getTrackFile()
 {
-  return musicFile;
+  return trackFile;
 }
 
 void Player::setPlaylist(PlayList * pl)
@@ -95,6 +97,7 @@ void Player::playPause(){
 void Player::playNextTrack()
 {
   if (!isReady) return;
+  pause();
   _loadNextTrack();
   play();
 }
@@ -102,6 +105,7 @@ void Player::playNextTrack()
 void Player::playPrevTrack()
 {
   if (!isReady) return;
+  pause();
   _loadPrevTrack();
   play();
 }
@@ -148,6 +152,7 @@ void Player::setVolume(float v)
 
 void Player::start()
 {
+  pause();
   loadTrack(currentPlayList->getSong());
   play();
 }
@@ -176,7 +181,7 @@ bool Player::isStopped()
   return state == AL_STOPPED;
 }
 
-void Player::loadMusicFile(MusicFile &musicFile)
+void Player::loadTrackFile()
 {
   if (isReady) {
       clear();
@@ -186,25 +191,23 @@ void Player::loadMusicFile(MusicFile &musicFile)
 
   alGenBuffers((ALuint)1, &buffer);
   // check for errors
-  alBufferData(buffer, AL_FORMAT_STEREO16, musicFile.samplesBuffer.arr, musicFile.samplesBuffer.size, musicFile.header.sampleRate);
+  alBufferData(buffer, AL_FORMAT_STEREO16, trackFile->getData(), trackFile->getSize(), trackFile->getSampleRate());
   alSourcei(source, AL_BUFFER, buffer);
   ALint source_state;
   alGetSourcei(source, AL_SOURCE_STATE, &source_state);
   // check for errors
-  if (this->musicFile != NULL) delete this->musicFile;
-  this->musicFile = &musicFile;
 }
 
 void Player::_loadNextTrack()
 {
   if (!isReady) return;
-  if(_isLoopedTrack){
-      return;
-    }
 
   QString name;
 
-  if (_isRandTrack){
+  if(_isLoopedTrack){
+      name = currentPlayList->getSong();
+    }
+  else if (_isRandTrack){
       name = getRandTrackName();
     }
   else{
@@ -224,11 +227,11 @@ void Player::_loadNextTrack()
 void Player::_loadPrevTrack()
 {
   if (!isReady) return;
-  if(_isLoopedTrack){
-      return;
-    }
   QString name;
-  if (_isRandTrack){
+  if(_isLoopedTrack){
+      name = currentPlayList->getSong();
+    }
+  else if (_isRandTrack){
       name = getRandTrackName();
     }
   else{
@@ -248,16 +251,12 @@ void Player::_loadPrevTrack()
 void Player::loadTrack(QString name)
 {
   if (name == "") return;
-  MusicFile* musicFile = new MusicFile;
-
-
-  Decoder::DecodeFile(
-        *musicFile,
-        err,
-        QString("music/").append(name).toLocal8Bit().data()
-        );
-
-  loadMusicFile(*musicFile);
+  TrackFile * tmp = trackFile;
+  trackFile = decoder->decodeFile(QString("music/").append(name).toStdString());
+  if (tmp != NULL) {
+      delete tmp;
+    }
+  loadTrackFile();
 }
 
 void Player::initOAL()
@@ -294,7 +293,7 @@ void Player::createSource()
   // check for errors
   alSource3f(source, AL_VELOCITY, 0, 0, 0);
   // check for errors
-  alSourcei(source, AL_LOOPING, ( _isLoopedTrack ? AL_TRUE : AL_FALSE ));
+  alSourcei(source, AL_LOOPING, AL_FALSE);
   // check for errros
 }
 
@@ -336,6 +335,13 @@ void Player::clear()
 
 Player::~Player()
 {
+  delete decoder;
+  if (trackFile != NULL) delete trackFile;
   this->setPlaylist(NULL);
   deinitOAL();
+}
+
+void Player::setLogger(Logger *_logger)
+{
+  logger = _logger;
 }

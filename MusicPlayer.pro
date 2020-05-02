@@ -24,10 +24,12 @@ SOURCES += \
     decoder/musicfiledecoder.cpp        \
     fft/Fourier.cpp                     \
     forms/mainwindow.cpp                \
+    forms/settingswindow.cpp \
     global_types/playlist.cpp           \
     global_types/trackfile.cpp \
     graphics/graphic.cpp                \
     graphics/ogltest.cpp                \
+    logger/logger.cpp \
     main.cpp \
     player_core/player.cpp
 
@@ -41,12 +43,14 @@ HEADERS += \
     decoder/musicfiledecoder.h          \
     fft/FourierDraw.h \
     forms/mainwindow.h                  \
+    forms/settingswindow.h \
     global_types/musicfile.h            \
     global_types/playlist.h             \
     global_types/trackfile.h \
     graphics/graphic.h                  \
     graphics/ogltest.h                  \
     graphics/visualization.h \
+    logger/logger.h \
     player_core/player.h \
     static_classes/fileassistant.h      \
     static_classes/styler.h \
@@ -54,7 +58,8 @@ HEADERS += \
 
 
 FORMS += \
-    forms/mainwindow.ui
+    forms/mainwindow.ui \
+    forms/settingswindow.ui
 
 
 # Default rules for deployment.

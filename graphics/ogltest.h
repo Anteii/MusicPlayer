@@ -6,15 +6,13 @@
 class OGLTest : public Visualization
 {
 public:
-  OGLTest(OGLF * f);
-  ~OGLTest();
+  OGLTest(OGLF * _f);
   void draw();
 
   void init() override;
   void deInit() override;
   void update() override;
-  void setMusicFile(MusicFile* musicFile) override;
-  void setPlayer(Player *pl) override;
+  void setPlayerController(PlayerController *ctr) override;
 private:
 
   float * points;
@@ -27,7 +25,8 @@ private:
   GLuint fs;
   GLuint shader_programme;
   Player * player;
-  MusicFile * mf;
+  PlayerController * pc;
+  OGLF * f;
 };
 
 #endif // OGLTEST_H

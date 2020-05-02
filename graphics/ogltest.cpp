@@ -2,9 +2,8 @@
 #include <QDebug>
 
 
-OGLTest::OGLTest(OGLF * f) : Visualization(f), mf(NULL)
+OGLTest::OGLTest(OGLF * _f) : f(_f)
 {
-  //initializeOpenGLFunctions();
   points = new float[9]{
     0.0f,  0.5f,  0.0f,
     0.5f, -0.5f,  0.0f,
@@ -31,36 +30,31 @@ OGLTest::OGLTest(OGLF * f) : Visualization(f), mf(NULL)
 
 }
 
-OGLTest::~OGLTest()
-{
-  glDeleteLists(lst, 1);
-}
-
 void OGLTest::init()
 {
 
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
+  f->glGenBuffers(1, &vbo);
+  f->glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  f->glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+  f->glGenVertexArrays(1, &vao);
+  f->glBindVertexArray(vao);
 
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  f->glEnableVertexAttribArray(0);
+  f->glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-  vs = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vs, 1, &vertex_shader, NULL);
-  glCompileShader(vs);
+  vs = f->glCreateShader(GL_VERTEX_SHADER);
+  f->glShaderSource(vs, 1, &vertex_shader, NULL);
+  f->glCompileShader(vs);
 
-  fs = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs, 1, &fragment_shader, NULL);
-  glCompileShader(fs);
+  fs = f->glCreateShader(GL_FRAGMENT_SHADER);
+  f->glShaderSource(fs, 1, &fragment_shader, NULL);
+  f->glCompileShader(fs);
 
-  shader_programme = glCreateProgram();
-  glAttachShader(shader_programme, fs);
-  glAttachShader(shader_programme, vs);
+  shader_programme = f->glCreateProgram();
+  f->glAttachShader(shader_programme, fs);
+  f->glAttachShader(shader_programme, vs);
 }
 
 void OGLTest::deInit()
@@ -73,16 +67,9 @@ void OGLTest::update()
   draw();
 }
 
-void OGLTest::setMusicFile(MusicFile* musicFile)
+void OGLTest::setPlayerController(PlayerController *ctr)
 {
-  mf = musicFile;
-  qDebug() << "Pointer: " << mf;
-}
-
-void OGLTest::setPlayer(Player *pl)
-{
-  player = pl;
-  qDebug() << pl->isRandTrack();
+  pc = ctr;
 }
 
 void OGLTest::draw()
@@ -91,13 +78,13 @@ void OGLTest::draw()
   //glLinkProgram(shader_programme);
   //glUseProgram(shader_programme);
 
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  f->glEnableVertexAttribArray(0);
+  f->glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-  glBindVertexArray(vao);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  f->glBindVertexArray(vao);
+  f->glDrawArrays(GL_TRIANGLES, 0, 3);
 
-  glDisableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  f->glDisableVertexAttribArray(0);
+  f->glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

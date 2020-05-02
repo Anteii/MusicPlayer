@@ -24,28 +24,23 @@ QOpenGLContext* Graphic::getContext()
 void Graphic::initEffect()
 {
   if (effect != NULL){
-      effect->setPlayer(player);
+      effect->setPlayerController(playerController);
       effect->init();
     }
   _isInitedEffect = true;
 }
 
-void Graphic::updateMusicFile(MusicFile *musicFile)
+void Graphic::setPlayerController(PlayerController *pctr)
 {
-  if (_isInited && _isInitedEffect){
-      effect->setMusicFile(musicFile);
-    }
-}
-
-void Graphic::setPlayer(Player *pl)
-{
-  player = pl;
+  playerController = pctr;
 }
 
 void Graphic::deInitEffect()
 {
   if (effect != NULL){
       effect->deInit();
+      //delete effect;
+      effect = NULL;
     }
   _isInitedEffect = false;
 }
@@ -58,6 +53,21 @@ bool Graphic::isInited()
 bool Graphic::isInitedEffect()
 {
   return _isInitedEffect;
+}
+
+void Graphic::setRedFlag(bool flag)
+{
+  redFlag = flag;
+}
+
+bool Graphic::getRedFlag()
+{
+  return redFlag;
+}
+
+bool Graphic::isUpdating()
+{
+  return _isUpdating;
 }
 
 void Graphic::renderText(double x, double y, double z, const QString & str, const QFont & font = QFont(), int listBase = 2000)
@@ -145,7 +155,8 @@ void Graphic::resizeGL(int h, int w)
 
 void Graphic::paintGL()
 {
-
+  if (redFlag) return;
+  _isUpdating = true;
   if (_isInitedEffect){
       effect->update();
     }
@@ -173,7 +184,7 @@ renderText(0.5, 0.5, 0.5, QString("ZAEBIS DISCKO"));
           glVertex3f((i-10.0)/10, -0.9, 0);
       glEnd();
   }
-
+  _isUpdating = false;
 }
 
 

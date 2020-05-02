@@ -2,7 +2,6 @@
 #define PLAYER_H
 
 #include <QDebug>
-#include <thread>
 #include <chrono>
 
 #include "al.h"
@@ -11,6 +10,7 @@
 #include "global_types/musicfile.h"
 #include "decoder/musicfiledecoder.h"
 #include "global_types/playlist.h"
+#include "logger/logger.h"
 
 /*!
 * @brief Basic music player class
@@ -42,7 +42,7 @@ public:
   int getDurationOfTrack();
   QString getCurrentTrackName();
   QString getRandTrackName();
-  MusicFile * getMusicFile();
+  TrackFile * getTrackFile();
 
   // playlist manipulating
   void setPlaylist(PlayList*);
@@ -71,11 +71,14 @@ public:
   inline bool isRandTrack() { return _isRandTrack; }
   ~Player();
 
+  void setLogger(Logger * _logger);
 
 private:
+  // Decoder
+  MusicFileDecoder * decoder = NULL;
   // low-level controlling
-  inline void clear();
-  void loadMusicFile(MusicFile& musicFile);
+  void clear();
+  void loadTrackFile();
   void _loadNextTrack();
   void _loadPrevTrack();
   void loadTrack(QString name);
@@ -88,8 +91,9 @@ private:
 
   // private properties
   PlayList * currentPlayList = NULL;
-  MusicFile * musicFile = NULL;
+  TrackFile * trackFile = NULL;
   errno_t err;
+  Logger * logger = NULL;
 
   // playing properties
   bool isReady = false;

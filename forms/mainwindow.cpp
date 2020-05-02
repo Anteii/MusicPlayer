@@ -1,31 +1,35 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "decoder/musicfiledecoder.h"
-#include "graphics/graphic.h"
-#include "static_classes/styler.h"
-
-
-MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
+#define logger_name logger
+MainWindow::MainWindow(Logger * _logger, QWidget *parent)
+  : QMainWindow(parent), logger(_logger)
   , ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-
   init();
 }
 
 MainWindow::~MainWindow()
 {
-  delete player;
+  LOG(Logger::Message, "Starting realease of MainWindow holding resources");
+  delete graphicController;
   delete listController;
+  delete timingController;
+  delete volumeController;
+  delete playerController;
+  delete player;
   delete ui;
+  delete fileAssistance;
+  delete settingsWindow;
+  LOG(Logger::Message, "All MainWindow resources were realeased");
 }
 
 void MainWindow::init()
 {
+  LOG(Logger::Message, "Begin MainWindow component initializations");
   FileAssistant::initMusicDir();
   FileAssistant::initPlaylistsDir();
-
+  initSettingsWindow();
   initPlayer();
   initPlayerController();
   initGraphicController();
@@ -33,13 +37,12 @@ void MainWindow::init()
   initTimingController();
   initVolumeController();
   initFA();
+  initStyles();
+  LOG(Logger::Message, "End of component initializations");
   makeConnections();
-
+  LOG(Logger::Message, "End of connections setups");
   this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/mainWindow.png"));
   this->setWindowTitle("MEGAPLAYER");
-  //ui->openGLWidget->setEffect(new OGLTest(ui->openGLWidget->getOGLF()));
-  graphicController->setVisualization(GraphicController::TEST);
-  initStyles();
 }
 
 void MainWindow::initList()
@@ -61,18 +64,20 @@ void MainWindow::initList()
 void MainWindow::initTimingController()
 {
   timingController = new TimingController;
+  timingController->setLogger(logger);
   timingController->initSlider(ui->slider);
 }
 
 void MainWindow::initPlayer()
 {
   player = new Player();
+  player->setLogger(logger);
 }
 
 void MainWindow::initPlayerController()
 {
   playerController = new PlayerController();
-
+  playerController->setLogger(logger);
   playerController->initPlayer(player);
 }
 
@@ -95,30 +100,27 @@ void MainWindow::initStyles()
 void MainWindow::initVolumeController()
 {
   volumeController = new VolumeController(this);
+  volumeController->setLogger(logger);
   volumeController->init(ui->volumeSlider);
 }
 
 void MainWindow::initGraphicController()
 {
   graphicController = new GraphicController(this);
+  graphicController->setLogger(logger);
   graphicController->init(ui->openGLWidget);
-  graphicController->setPlayer(player);
+  graphicController->setPlayerController(playerController);
+  graphicController->setVisualization(GraphicController::NONE);
 }
 
 void MainWindow::makeConnections()
 {
-  // Play/pause btn -> playPause player
-  connect(
-        ui->playPauseBtn,
-        SIGNAL (clicked(void)),
-        this->playerController,
-        SLOT ( playPause(void) ));
-  // Play/pause btn -> switch btn style
+  // Play/pause btn
   connect(
         ui->playPauseBtn,
         &QPushButton::clicked,
-        ui->playPauseBtn,
         [&](){
+          playerController->playPause();
           if (player->isPlaying()){
               Styler::setBtnPause(ui->playPauseBtn);
             }
@@ -127,71 +129,70 @@ void MainWindow::makeConnections()
             }
         }
         );
-  // nextTrackBtn -> playNextTrack player
+  // nextTrackBtn
   connect(
         ui->nextTrackBtn,
         SIGNAL (clicked(void)),
         this->playerController,
         SLOT (playNextTrack(void))
         );
-  // prevTrackBtn -> playPrevTrackBtn player
+  // prevTrackBtn
   connect(
         ui->prevTrackBtn,
         SIGNAL (clicked(void)),
         this->playerController,
         SLOT (playPrevTrack(void))
         );
-
-  // positionChanged player -> setValue slider
-  connect(
-        playerController,
-        SIGNAL(trackPositionChanged(int)),
-        timingController,
-        SLOT(setValue(int)));
-  // durationChanged player -> setMaximum slider
-
+  // durationChanged player
   connect(
         this->playerController,
         &PlayerController::trackDurationChanged,
         ui->slider,
         &QSlider::setMaximum);
-  // songChanged player -> setSelected listController
+  // trackChanged player
   connect(
         this->playerController,
         &PlayerController::trackChanged,
-        this->listController,
         [&](){
-        if (player->getPlaylist() != NULL &&
-            *(player->getPlaylist()) == *(listController->getPlayList())){
-            listController->setSelected(player->getCurrentTrackName());
+        if (playerController->getPlaylist() != NULL &&
+            *(playerController->getPlaylist()) == *(listController->getPlayList()))
+          {
+            listController->setSelected(playerController->getCurrentTrackName());
           }
     });
-  // replayTrackBtn -> setLooped player
+  // trackChanged player
+  connect(
+        this->playerController,
+        &PlayerController::trackChanging,
+        [&](){
+        graphicController->handleChangedTrack();
+    });
+  // replayTrackBtn
   connect(
         ui->replayTrackBtn,
         &QPushButton::clicked,
         [&](){
-            bool flag = !(player->isLoopedTrack());
+            bool flag = !(playerController->isLoopedTrack());
             Styler::setBtnRepeatTrack(ui->replayTrackBtn, flag);
-            player->setLoopedTrack(flag);
+            playerController->setLoopedTrack(flag);
         });
-  // randTrackBtn -> setRand player
+  // randTrackBtn
   connect(
         ui->randTrackBtn,
         &QPushButton::clicked,
         [&](){
-      bool flag = !(player->isRandTrack());
+      bool flag = !(playerController->isRandTrack());
       Styler::setBtnRandTrack(ui->randTrackBtn, flag);
-      player->setRandTrack(flag);
+      playerController->setRandTrack(flag);
     });
-  // sliderPressed slider -> capture sliderController
+  // sliderPressed slider
   connect(
         ui->slider,
         &QSlider::sliderPressed,
         timingController,
         &TimingController::capture
         );
-  // sliderRelease slider -> free sliderController
+  // sliderRelease slider
   connect(
         ui->slider,
         &QSlider::sliderReleased,
@@ -205,57 +206,63 @@ void MainWindow::makeConnections()
         playerController,
         &PlayerController::setTime
         );
-  //
+  // правая кнопка на песне/плейлисте
   connect(
         ui->listWidget,
         SIGNAL(customContextMenuRequested(const QPoint &)),
         listController,
         SLOT(ProvideContextMenu(const QPoint &))
         );
-  //
+  // Volume slider change
   connect(
         ui->volumeSlider,
         &QSlider::valueChanged,
         volumeController,
-        &VolumeController::sliderPosChanged
+        &VolumeController::setVolume
         );
   //
   connect(
         volumeController,
-        &VolumeController::volumeSet,
+        &VolumeController::volumeChanged,
         playerController,
         &PlayerController::setVolume
         );
-  connect(
-        playerController,
-        &PlayerController::trackChanged,
-        [&](){
-      graphicController->setMusicFile( playerController->getMusicFile() );
-
-    });
+  connect(settingsWindow,
+          &SettingsWindow::visTypeChanged,
+          graphicController,
+          &GraphicController::setVisualization
+    );
   // positionChanged player -> update label-timer
   connect(
         this->playerController,
         &PlayerController::trackPositionChanged,
         [&](int time){
+      timingController->setValue(time);
       int m, s, ms;
-      ms = time % 100;
+      ms = time % 100 / 10;
       s = (time / 1000) % 60;
       m = (time / 60000) % 60;
       QString ttime;
-      ttime.sprintf("%.2i:%.2i:%.2i", m, s, ms);
+      ttime.sprintf("%.2i:%.2i:%.1i", m, s, ms);
       ui->currentTime->setText(ttime);
     });
 }
 
+void MainWindow::initSettingsWindow()
+{
+  settingsWindow = new SettingsWindow(this);
+}
+
+void MainWindow::initLogger()
+{
+  logger = new Logger();
+}
+
 void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << ui->openGLWidget->getOGLF();
-    //ui->openGLWidget->setEffect(new OGLTest((OGLF*)ui->openGLWidget));
-    //graphicController->setVisualisation(GraphicController::TEST);
     QString type = item->data(Qt::UserRole).toString();
     QString text = item->text();
-
+    LOG(Logger::Message, "Double click on list");
     if (type == "playlist"){
 
         QFile temp(fileAssistance->getPlaylistPath(text));
@@ -282,7 +289,6 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
           }
       }
     else if (type == "track"){
-        qDebug() << "Track was selected";
 
         // Configure playlist
         PlayList * temp = listController->getPlayList();
@@ -298,8 +304,13 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
             player->getPlaylist()->setSong(text);
           }
         playerController->start();
-        //ui->playPauseBtn->setText("Pause");
         ui->slider->setEnabled(true);
         Styler::setBtnPause(ui->playPauseBtn);
       }
+}
+
+void MainWindow::on_actionVisualization_settings_triggered()
+{
+  LOG(Logger::Message, "Settings window was triggered from menu tab");
+  settingsWindow->show();
 }

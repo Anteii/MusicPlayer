@@ -4,7 +4,7 @@
 #include <QObject>
 #include <thread>
 #include "player_core/player.h"
-
+#include "logger/logger.h"
 
 class PlayerController : public QObject
 {
@@ -12,16 +12,26 @@ class PlayerController : public QObject
 public:
   explicit PlayerController(QObject *parent = nullptr);
   void initPlayer(Player * player);
-  void initUpdater();
+
+  PlayList* getPlaylist();
   MusicFile * getMusicFile();
+  TrackFile * getTrackFile();
+  QString getCurrentTrackName();
+  bool isLoopedTrack();
+  bool isRandTrack();
+  void setRandTrack(bool);
+  void setLoopedTrack(bool);
+  bool isPlaying();
+  int getCurrentPosition();
+
+  void setLogger(Logger * _logger);
   ~PlayerController();
 
 signals:
   void trackPositionChanged(int pos);
   void trackDurationChanged(int duration);
   void trackChanged();
-  void trackEnded(void);
-
+  void trackChanging();
 public slots:
   void setTime(int);
   void start();
@@ -31,9 +41,11 @@ public slots:
   void playPrevTrack();
 
 private:
+  void initUpdater();
   bool isInited = false;
   Player * player = NULL;
   std::thread * updater = NULL;
+  Logger * logger = NULL;
 };
 
 #endif // PLAYERCONTROLLER_H

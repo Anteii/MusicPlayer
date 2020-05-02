@@ -4,8 +4,16 @@
 class TrackFile
 {
 public:
-  TrackFile();
-
+  TrackFile(const char* _name, const char* _ext,
+            unsigned short _numChannels, unsigned long _sampleRate,
+            char * _data, unsigned int _size);
+  unsigned short getNumChannels();
+  unsigned long getSampleRate();
+  unsigned long getByteRate();
+  unsigned int getSize();
+  short getBitsPerSample();
+  char * getData();
+  ~TrackFile();
 private:
   const char * name;
   const char * ext;
@@ -13,8 +21,8 @@ private:
   unsigned long sampleRate;
   unsigned long byteRate;
   short bitsPerSample;
-  short * data;
-  long dataSize;
+  char * data;
+  unsigned int size;
 };
 
 #endif // TRACKFILE_H

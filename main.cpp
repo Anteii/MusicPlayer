@@ -3,6 +3,8 @@
 #include "dep/mpg123/mpg123.h"
 #include <fstream>
 #include <vector>
+#include <decoder/musicfiledecoder.h>
+#include "logger/logger.h"
 /*!
 * @brief Entry point
 *
@@ -14,48 +16,36 @@
 *
 * @return Program exit status
 */
-void test(){
-  mpg123_init();
-
-     int err;
-     mpg123_handle *mh = mpg123_new(NULL, &err);
-     unsigned char *buffer;
-     size_t buffer_size;
-     size_t done;
-
-     int channels, encoding;
-     long rate;
-     buffer_size = mpg123_outblock(mh);
-     buffer = (unsigned char*)malloc(buffer_size * sizeof(unsigned char));
-
-     mpg123_open(mh, "music/test.mp3");
-     mpg123_getformat(mh, &rate, &channels, &encoding);
-
-     std::ofstream out("res.txt");
-     unsigned int counter = 0;
-     std::vector<short*> temp();
-     qDebug() << "s";
-     for (int totalBtyes = 0; mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK; ) {
-         short* tst = reinterpret_cast<short*>(buffer);
-         for (auto i = 0; i < buffer_size / 2; i++) {
-             out<< counter + i<<"\t"<< tst[i] << "\n";
-         }
-         counter += buffer_size/2;
-         totalBtyes += done;
-     }
-     qDebug() << "e";
-     out.close();
-     free(buffer);
-     mpg123_close(mh);
-     mpg123_delete(mh);
-     mpg123_exit();
+Logger logger;
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+   std::string localMsg = msg.toStdString();
+   switch (type) {
+   case QtDebugMsg:
+       logger.log(Logger::Message, localMsg, context.file, context.line);
+       break;
+   case QtInfoMsg:
+       logger.log(Logger::Message, localMsg, context.file, context.line);
+       break;
+   case QtWarningMsg:
+       logger.log(Logger::Warning, localMsg, context.file, context.line);
+       break;
+   case QtCriticalMsg:
+       logger.log(Logger::Error, localMsg, context.file, context.line);
+       break;
+   case QtFatalMsg:
+       logger.log(Logger::Error, localMsg, context.file, context.line);
+       abort();
+   }
 }
+
 int main(int argc, char *argv[])
 {
+  // Если расскоментить эти строчки, то вывод будет в логгер
+  qInstallMessageHandler(myMessageOutput); // Install the handler
   QApplication a(argc, argv);
-  MainWindow w;
-
-  test();
+  MainWindow w(&logger);
   w.show();
+  // почему-то выдает ошибку
   return a.exec();
 }

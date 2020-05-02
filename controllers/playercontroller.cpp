@@ -25,7 +25,7 @@ void PlayerController::initUpdater()
           // while waiting for playing
           while(!player->isPlaying()){
             //qDebug() << "waiting ";
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(68));
           }
 
           // while playing
@@ -37,7 +37,7 @@ void PlayerController::initUpdater()
             }
           qDebug() << "iteration sdox ";
           if (player->isStopped()){
-
+              emit pc->trackChanging();
               pc->playNextTrack();
               qDebug() << "next";
             }
@@ -47,9 +47,54 @@ void PlayerController::initUpdater()
   updater->detach();
 }
 
-MusicFile *PlayerController::getMusicFile()
+PlayList* PlayerController::getPlaylist()
 {
-  return player->getMusicFile();
+  return player->getPlaylist();
+}
+
+TrackFile *PlayerController::getTrackFile()
+{
+  return player->getTrackFile();
+}
+
+QString PlayerController::getCurrentTrackName()
+{
+  return player->getCurrentTrackName();
+}
+
+bool PlayerController::isLoopedTrack()
+{
+  return player->isLoopedTrack();
+}
+
+bool PlayerController::isRandTrack()
+{
+  return player->isRandTrack();
+}
+
+void PlayerController::setRandTrack(bool flag)
+{
+  player->setRandTrack(flag);
+}
+
+void PlayerController::setLoopedTrack(bool flag)
+{
+  return player->setLoopedTrack(flag);
+}
+
+bool PlayerController::isPlaying()
+{
+  return player->isPlaying();
+}
+
+int PlayerController::getCurrentPosition()
+{
+  return player->getCurrentPosition();
+}
+
+void PlayerController::setLogger(Logger *_logger)
+{
+  logger = _logger;
 }
 
 PlayerController::~PlayerController()
@@ -59,16 +104,16 @@ PlayerController::~PlayerController()
 
 void PlayerController::setTime(int time)
 {
+  qDebug() << 1;
   player->setTime(time);
-  emit trackDurationChanged(player->getDurationOfTrack());
-  emit trackChanged();
 }
 
 void PlayerController::start()
 {
+  emit trackChanging();
   player->start();
-  emit trackDurationChanged(player->getDurationOfTrack());
   emit trackChanged();
+  emit trackDurationChanged(player->getDurationOfTrack());
 }
 
 void PlayerController::setVolume(float v)
@@ -86,14 +131,14 @@ void PlayerController::playNextTrack()
 {
   if (!isInited) return;
   player->playNextTrack();
-  emit trackDurationChanged(player->getDurationOfTrack());
   emit trackChanged();
+  emit trackDurationChanged(player->getDurationOfTrack());
 }
 
 void PlayerController::playPrevTrack()
 {
   if (!isInited) return;
   player->playPrevTrack();
-  emit trackDurationChanged(player->getDurationOfTrack());
   emit trackChanged();
+  emit trackDurationChanged(player->getDurationOfTrack());
 }

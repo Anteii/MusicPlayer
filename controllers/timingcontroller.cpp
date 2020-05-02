@@ -11,6 +11,11 @@ void TimingController::initSlider(QSlider *slider)
   isInited = true;
 }
 
+void TimingController::setLogger(Logger *_logger)
+{
+  logger = _logger;
+}
+
 void TimingController::setValue(int val)
 {
   if (isCaptured) return;

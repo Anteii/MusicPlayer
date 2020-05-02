@@ -23,12 +23,13 @@ public:
 
   void setEffect(Visualization * ef);
   void initEffect();
-  void updateMusicFile(MusicFile * musicFile);
-  void setPlayer(Player * pl);
+  void setPlayerController(PlayerController * pctr);
   void deInitEffect();
   bool isInited();
   bool isInitedEffect();
-
+  void setRedFlag(bool);
+  bool getRedFlag();
+  bool isUpdating();
 private:
   Visualization * effect;
 
@@ -47,10 +48,12 @@ protected:
 signals:
 
 private:
+  bool _isUpdating = false;
   QPainter * _painter;
   bool _isInited;
   bool _isInitedEffect;
-  Player * player;
+  bool redFlag = false;
+  PlayerController * playerController;
 };
 
 #endif // GRAPHIC_H

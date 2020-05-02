@@ -9,6 +9,7 @@ int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName
 	if (err)
 	{
 		printf_s("Failed open file, error %d", err);
+		qDebug() << QString("Failed open file, error %d");
 		return 0;
 	}
 
@@ -45,4 +46,107 @@ int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName
 
 	fclose(file);
 	return 0;
+}
+
+TrackFile *MusicFileDecoder::decodeWAV(std::string path)
+{
+  errno_t err;
+  MusicFile * mf = new MusicFile;
+  Decoder::DecodeFile(*mf, err, path.c_str());
+  int ext_pos = path.find_last_of('.');
+  std::string ext = path.substr(ext_pos + 1, path.size() - 1).c_str();
+  int t1 = path.find_last_of("/");
+  int t2 = path.find_last_of("\\");
+  int name_pos = (t1 > t2 ? t1 : t2);
+  std::string name = path.substr(name_pos + 1, ext_pos - 1);
+  return new TrackFile(name.c_str(), ext.c_str(), mf->header.numChannels, mf->header.sampleRate, (char*)mf->samplesBuffer.arr, mf->samplesBuffer.size);
+}
+
+TrackFile *MusicFileDecoder::decodeMP3(std::string path)
+{
+  mpg123_open(mh, path.c_str());
+  int channels;
+  int encoding;
+  long rate;
+
+  mpg123_getformat(
+          mh, &rate, &channels, &encoding
+  );
+
+  std::vector<char> *temp = new std::vector<char>;
+  std::size_t done;
+  int totalBytes = 0;
+
+  for (; mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK; ) {
+          //short* tst = reinterpret_cast<short*>(buffer);
+          for (int i = 0; i < buffer_size; i++) {
+                  temp->push_back(buffer[i]);
+          }
+          totalBytes += done;
+  }
+
+  int ext_pos = path.find_last_of('.');
+  std::string ext = path.substr(ext_pos + 1, path.size() - 1).c_str();
+  int t1 = path.find_last_of("/");
+  int t2 = path.find_last_of("\\");
+  int name_pos = (t1 > t2 ? t1 : t2);
+  std::string name = path.substr(name_pos + 1, ext_pos);
+  //char * data = temp->data();
+  char * data = new char[totalBytes];
+  for(int i = 0; i < totalBytes; ++i){
+      data[i] = temp->at(i);
+    }
+  delete temp;
+  TrackFile * t = new TrackFile(name.c_str(), ext.c_str(), channels, rate, data, totalBytes);
+  return t;
+}
+
+MusicFileDecoder::MusicFileDecoder()
+{
+  supportedFormats[0] = "wav";
+  supportedFormats[1] = "mp3";
+  mpg123_init();
+  int err;
+  mh = mpg123_new(NULL, &err);
+  buffer_size = mpg123_outblock(mh);
+  buffer = (unsigned char*)malloc(buffer_size * sizeof(unsigned char));
+}
+
+MusicFileDecoder::~MusicFileDecoder()
+{
+
+
+  free(buffer);
+  mpg123_close(mh);
+  mpg123_delete(mh);
+  mpg123_exit();
+}
+
+TrackFile* MusicFileDecoder::decodeFile(std::string path)
+{
+  int ext_pos = path.find_last_of('.');
+  std::string ext = path.substr(ext_pos + 1, path.size() - 1).c_str();
+  bool flag = false;
+
+  for(std::string sf : supportedFormats){
+      if (ext == sf){
+          flag = true;
+          break;
+        }
+    }
+  int t1 = path.find_last_of("/");
+  int t2 = path.find_last_of("\\");
+  int name_pos = (t1 > t2 ? t1 : t2);
+  std::string name = path.substr(name_pos + 1, ext_pos);
+  if (!flag){
+      // Some shit to prevent unsupp format
+      return NULL;
+    }
+  if (ext == "wav"){
+      return decodeWAV(path);
+    }
+  else if (ext == "mp3"){
+      return decodeMP3(path);
+    }
+  return NULL;
 }

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListWidget>
 
+#include "forms/settingswindow.h"
 #include "player_core/player.h"
 #include "controllers/listcontroller.h"
 #include "static_classes/fileassistant.h"
@@ -12,6 +13,10 @@
 #include "controllers/playercontroller.h"
 #include "controllers/graphiccontroller.h"
 #include "player_core/player.h"
+#include "logger/logger.h"
+#include "decoder/musicfiledecoder.h"
+#include "graphics/graphic.h"
+#include "static_classes/styler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,11 +27,13 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  MainWindow(QWidget *parent = nullptr);
+  MainWindow(Logger * _logger, QWidget *parent = nullptr);
   ~MainWindow();
 
 private slots:
   void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
+  void on_actionVisualization_settings_triggered();
 
 private:
   Ui::MainWindow *ui;
@@ -40,6 +47,8 @@ private:
   void initVolumeController();
   void initGraphicController();
   void makeConnections();
+  void initSettingsWindow();
+  void initLogger();
 
   FileAssistant * fileAssistance = NULL;
   Player* player = NULL;
@@ -48,5 +57,7 @@ private:
   VolumeController * volumeController = NULL;
   PlayerController * playerController = NULL;
   GraphicController * graphicController = NULL;
+  SettingsWindow * settingsWindow = NULL;
+  Logger * logger = NULL;
 };
 #endif // MAINWINDOW_H

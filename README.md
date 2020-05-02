@@ -8,3 +8,6 @@ Our Plan:
 
 ## Dependencies
  - OpenAl
+ - OpenGL v4.3 Core
+ - mpg123
+ 

@@ -30,6 +30,7 @@ public:
   void setRedFlag(bool);
   bool getRedFlag();
   bool isUpdating();
+  void clear();
 private:
   Visualization * effect;
 

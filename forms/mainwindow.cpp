@@ -110,7 +110,7 @@ void MainWindow::initGraphicController()
   graphicController->setLogger(logger);
   graphicController->init(ui->openGLWidget);
   graphicController->setPlayerController(playerController);
-  graphicController->setVisualization(GraphicController::NONE);
+  graphicController->setVisualization(GraphicController::FIRST);
 }
 
 void MainWindow::makeConnections()

@@ -22,11 +22,12 @@ SOURCES += \
     controllers/timingcontroller.cpp    \
     controllers/volumecontroller.cpp    \
     decoder/musicfiledecoder.cpp        \
-    fft/Fourier.cpp                     \
+    fft/fourierdecomposition.cpp \
     forms/mainwindow.cpp                \
     forms/settingswindow.cpp \
     global_types/playlist.cpp           \
     global_types/trackfile.cpp \
+    graphics/FourierDraw.cpp \
     graphics/graphic.cpp                \
     graphics/ogltest.cpp                \
     logger/logger.cpp \
@@ -41,12 +42,13 @@ HEADERS += \
     controllers/timingcontroller.h      \
     controllers/volumecontroller.h      \
     decoder/musicfiledecoder.h          \
-    fft/FourierDraw.h \
+    fft/fourierdecomposition.h \
     forms/mainwindow.h                  \
     forms/settingswindow.h \
     global_types/musicfile.h            \
     global_types/playlist.h             \
     global_types/trackfile.h \
+    graphics/FourierDraw.h \
     graphics/graphic.h                  \
     graphics/ogltest.h                  \
     graphics/visualization.h \

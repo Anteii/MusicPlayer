@@ -120,7 +120,7 @@ void GraphicController::initUpdaterThread()
       while(true){
           while(graphic->isInitedEffect() && gc->nextVisType == -1 && !(gc->trackChanging) && !gc->_shutDown){
               graphic->update();
-              _sleep(68);
+              _sleep(50);
             }
           if (gc->trackChanging){
               LOG(Logger::Message, "Wait while player still playing");

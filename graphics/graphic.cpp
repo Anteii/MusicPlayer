@@ -161,29 +161,29 @@ void Graphic::paintGL()
       effect->update();
     }
 
-renderText(0.5, 0.5, 0.5, QString("ZAEBIS DISCKO"));
-  for(int i = 0; i < 20; i++){
-      glBegin(GL_TRIANGLES);
-      glColor3f(
-            (float)std::rand() / RAND_MAX,
-            (float)std::rand() / RAND_MAX,
-            (float)std::rand() / RAND_MAX
-            );
-          glVertex3f((i-10.0)/10, -1, 0);
-          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
-          glVertex3f((i-10.0 + 0.9)/10, -1, 0);
-      glEnd();
-      glBegin(GL_TRIANGLES);
-      glColor3f(
-            (float)std::rand() / RAND_MAX,
-            (float)std::rand() / RAND_MAX,
-            (float)std::rand() / RAND_MAX
-            );
-          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
-          glVertex3f((i-10.0)/10, -1, 0);
-          glVertex3f((i-10.0)/10, -0.9, 0);
-      glEnd();
-  }
+//renderText(0.5, 0.5, 0.5, QString("ZAEBIS DISCKO"));
+//  for(int i = 0; i < 20; i++){
+//      glBegin(GL_TRIANGLES);
+//      glColor3f(
+//            (float)std::rand() / RAND_MAX,
+//            (float)std::rand() / RAND_MAX,
+//            (float)std::rand() / RAND_MAX
+//            );
+//          glVertex3f((i-10.0)/10, -1, 0);
+//          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
+//          glVertex3f((i-10.0 + 0.9)/10, -1, 0);
+//      glEnd();
+//      glBegin(GL_TRIANGLES);
+//      glColor3f(
+//            (float)std::rand() / RAND_MAX,
+//            (float)std::rand() / RAND_MAX,
+//            (float)std::rand() / RAND_MAX
+//            );
+//          glVertex3f((i-10.0 + 0.9)/10, -0.9, 0);
+//          glVertex3f((i-10.0)/10, -1, 0);
+//          glVertex3f((i-10.0)/10, -0.9, 0);
+//      glEnd();
+//  }
   _isUpdating = false;
 }
 

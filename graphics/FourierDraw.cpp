@@ -28,85 +28,46 @@ void FourierDraw::init() {
 }
 void FourierDraw::deInit() {
     delete[] g_vertex_buffer_data;
+    delete[] currFrame;
+    delete dec;
 }
 void FourierDraw::update() {
-
     if(pc->getTrackFile() != NULL) {
-         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-         f->glEnableVertexAttribArray(0);
-         f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-         f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-         f->glBindVertexArray(VertexArrayID);
-         f->glUseProgram(programID);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        f->glEnableVertexAttribArray(0);
+        f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+        f->glBindVertexArray(VertexArrayID);
+        f->glUseProgram(programID);
 
-         GLuint transVec = f->glGetUniformLocation(programID, "transform");
-         double* result = GetFrame(pc->getCurrentPosition() / 1000.0, n);
-         GLfloat vec[3]; vec[0] = n;
-         for(int i = 0; i < n; i++) {
-             vec[1] = i;
-             vec[2] = Normalize(result[2*i]);
-             f->glUniform3fv(transVec, 1, vec);
-             glDrawArrays(GL_TRIANGLES, 0, 3);
-             glDrawArrays(GL_TRIANGLES, 1, 3);
+        GLuint transVec = f->glGetUniformLocation(programID, "transform");
 
-             vec[2] = -Normalize(result[2*i + 1]);
-             f->glUniform3fv(transVec, 1, vec);
-             glDrawArrays(GL_TRIANGLES, 0, 3);
-             glDrawArrays(GL_TRIANGLES, 1, 3);
-         }
 
-         delete[] result;
+        currFrame = dec->GetFrame(pc->getCurrentPosition() / 1000.0, n);
+
+        GLfloat vec[3]; vec[0] = n;
+        for(int i = 0; i < n; i++) {
+            vec[1] = i;
+            vec[2] = Normalize(currFrame[2*i]);
+            f->glUniform3fv(transVec, 1, vec);
+            f->glDrawArrays(GL_TRIANGLES, 0, 3);
+            f->glDrawArrays(GL_TRIANGLES, 1, 3);
+
+            vec[2] = -Normalize(currFrame[2*i + 1]);
+            f->glUniform3fv(transVec, 1, vec);
+            f->glDrawArrays(GL_TRIANGLES, 0, 3);
+            f->glDrawArrays(GL_TRIANGLES, 1, 3);
+        }
     }
 }
-
+double FourierDraw::Normalize(double x) {
+    return 1.4 / (1 + exp(-x/30)) - 0.7;
+    //return 0.3*log(0.1*x + 1);
+}
 void FourierDraw::setPlayerController(PlayerController *ctr)
 {
   pc = ctr;
-  tfile = pc->getTrackFile();
-}
-
-double FourierDraw::getY(double x, bool isRightChannel) {
-    x *= pc->getTrackFile()->getSampleRate();
-    if (pc->getTrackFile()->getBitsPerSample() == 8)
-    {
-        char* arr = pc->getTrackFile()->getData();
-        if (pc->getTrackFile()->getNumChannels() == 1) return arr[(int)x];
-        else if (isRightChannel) return arr[(int)x * 2 + 1];
-        else return arr[(int)x * 2];
-    }
-    else
-    {
-        short int* arr = (short int*)pc->getTrackFile()->getData();
-        if (pc->getTrackFile()->getNumChannels() == 1) return arr[(int)x];
-        else if (isRightChannel) return arr[(int)x * 2 + 1];
-        else return arr[(int)x * 2];
-    }
-}
-double FourierDraw::integral(double a, double freq, bool isRightChannel) {
-    double x = 0, y = 0;
-    double b = freq == 0 ? dpi : dpi / freq;
-    if(freq > 1000) b *= 4;
-    else if(freq > 100) b *= 2;
-    double step = b / 2000;
-    b += a;
-    for (double i = a; i <= b; i += step) {
-        double t = (i - a) * freq;
-        double Y = getY(i, isRightChannel);
-        x += Y * cos(t);
-        y += Y * sin(t);
-    }
-    return step * sqrt(x*x + y*y);
-}
-double* FourierDraw::GetFrame(double x, int count) {
-    double C = 100;                        // 100 - минимальная частота
-    double alpha = log(16000/C) / count;    // 16000 - максимальная частота
-    double* arrFreq = new double[count * 2];
-    for(int i = 0; i < count; i++) {
-        arrFreq[i*2] = integral(x, C*exp(alpha*i), true);
-        if(pc->getTrackFile()->getNumChannels() == 1) arrFreq[i*2 + 1] = arrFreq[i*2];
-        else arrFreq[i*2 + 1] = integral(x, C*exp(alpha*i), false);
-    }
-    return arrFreq;
+  dec = new FourierDecomposition(ctr);
 }
 GLuint FourierDraw::LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
 
@@ -188,7 +149,4 @@ GLuint FourierDraw::LoadShaders(const char * vertex_file_path,const char * fragm
     f->glDeleteShader(FragmentShaderID);
 
     return ProgramID;
-}
-double FourierDraw::Normalize(double x) {
-    return 1.4 / (1 + exp(-x/30)) - 0.7;
 }

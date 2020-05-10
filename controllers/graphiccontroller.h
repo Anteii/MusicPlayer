@@ -8,7 +8,7 @@
 #include "graphics/graphic.h"
 #include "graphics/Visualization.h"
 #include "graphics/ogltest.h"
-#include "fft/FourierDraw.h"
+#include "graphics/FourierDraw.h"
 #include "logger/logger.h"
 #define logger_name logger
 class GraphicController : public QObject

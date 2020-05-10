@@ -10,6 +10,7 @@
     </qresource>
     <qresource prefix="/Windows">
         <file>resources/icons/windows/mainWindow.png</file>
+        <file>resources/icons/windows/settingsWindow.png</file>
     </qresource>
     <qresource prefix="/ListItems">
         <file>resources/icons/listItems/back.png</file>

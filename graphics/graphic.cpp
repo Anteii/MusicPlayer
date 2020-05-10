@@ -70,6 +70,12 @@ bool Graphic::isUpdating()
   return _isUpdating;
 }
 
+void Graphic::clear()
+{
+  makeCurrent();
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void Graphic::renderText(double x, double y, double z, const QString & str, const QFont & font = QFont(), int listBase = 2000)
 {
       int height = this->height();

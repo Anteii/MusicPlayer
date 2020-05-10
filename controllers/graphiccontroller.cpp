@@ -92,6 +92,11 @@ void GraphicController::_setVisualization(int type)
 
     case NONE:
       vis = NULL;
+      graphic->setRedFlag(true);
+      graphic->clear();
+      graphic->setRedFlag(false);
+      while(graphic->isUpdating());
+      graphic->update();
     break;
 
     case TEST:

@@ -5,8 +5,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
   QDialog(parent),
   ui(new Ui::SettingsWindow)
 {
-  visualizationType = GraphicController::NONE;
   ui->setupUi(this);
+  visualizationType = GraphicController::NONE;
+  this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/settingsWindow.png"));
+  this->setWindowTitle("Settings");
 }
 
 void SettingsWindow::setLogger(Logger *_logger)

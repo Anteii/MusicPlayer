@@ -36,7 +36,7 @@ private:
   int nextVisType = 0;
   void initUpdaterThread();
   Logger * logger = NULL;
-  bool _isInited;
+  bool _isInited = false;
   bool synchronizedFlag= false;
   bool trackChanging = false;
   bool _shutDown = false;

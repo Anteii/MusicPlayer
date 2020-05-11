@@ -38,7 +38,6 @@ void PlayerController::initUpdater()
           qDebug() << "iteration sdox ";
           if (player->isStopped()){
               emit pc->trackChanging();
-              pc->playNextTrack();
               qDebug() << "next";
             }
         }

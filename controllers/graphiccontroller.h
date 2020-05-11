@@ -31,6 +31,7 @@ public slots:
   void setPlayerController(PlayerController * pc);
 signals:
   void changeVisualization(int);
+  void readyToChange();
 private:
   void _setVisualization(int type);
   int nextVisType = 0;

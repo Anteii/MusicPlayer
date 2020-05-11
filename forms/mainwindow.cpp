@@ -167,6 +167,12 @@ void MainWindow::makeConnections()
         [&](){
         graphicController->handleChangedTrack();
     });
+  connect(
+        this->graphicController,
+        &GraphicController::readyToChange,
+        [&](){
+      player->playNextTrack();
+    });
   // replayTrackBtn
   connect(
         ui->replayTrackBtn,

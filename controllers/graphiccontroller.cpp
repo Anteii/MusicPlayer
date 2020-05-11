@@ -45,6 +45,7 @@ void GraphicController::handleChangedTrack()
   graphic->setRedFlag(true);
   LOG(Logger::Message, "Wait while graphic widget still updating");
   while(graphic->isUpdating());
+  emit readyToChange();
   trackChanging = true;
 }
 
@@ -125,7 +126,7 @@ void GraphicController::initUpdaterThread()
       while(true){
           while(graphic->isInitedEffect() && gc->nextVisType == -1 && !(gc->trackChanging) && !gc->_shutDown){
               graphic->update();
-              _sleep(50);
+              _sleep(68);
             }
           if (gc->trackChanging){
               LOG(Logger::Message, "Wait while player still playing");

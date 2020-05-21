@@ -110,11 +110,31 @@ void MainWindow::initGraphicController()
   graphicController->setLogger(logger);
   graphicController->init(ui->openGLWidget);
   graphicController->setPlayerController(playerController);
-  graphicController->setVisualization(GraphicController::FIRST);
 }
 
 void MainWindow::makeConnections()
 {
+  // Трек сам закончился
+  connect(playerController,
+          &PlayerController::trackEnded,
+          [&](){
+      qDebug() << "FUUUUUUUUUUUUUUCK1";
+      playerController->pause();
+      qDebug() << "FUUUUUUUUUUUUUUCK1.5";
+      graphicController->stopUpdating();
+      qDebug() << "FUUUUUUUUUUUUUUCK2";
+      playerController->playNextTrack();
+      qDebug() << "FUUUUUUUUUUUUUUCK3";
+      graphicController->startUpdating();
+      qDebug() << "FUUUUUUUUUUUUUUCK4";
+      if (playerController->getPlaylist() != NULL &&
+        *(playerController->getPlaylist()) == *(listController->getPlayList()))
+      {
+        listController->setSelected(playerController->getCurrentTrackName());
+      }
+    });
+  // Двойной клик в плейлисте обрабатывается здесь on_listWidget_itemDoubleClicked
+  // -------------- SAFE -------------------
   // Play/pause btn
   connect(
         ui->playPauseBtn,
@@ -132,47 +152,41 @@ void MainWindow::makeConnections()
   // nextTrackBtn
   connect(
         ui->nextTrackBtn,
-        SIGNAL (clicked(void)),
-        this->playerController,
-        SLOT (playNextTrack(void))
-        );
+        &QPushButton::clicked,
+        [&](){
+      playerController->pause();
+      graphicController->stopUpdating();
+      playerController->playNextTrack();
+      graphicController->startUpdating();
+      if (playerController->getPlaylist() != NULL &&
+        *(playerController->getPlaylist()) == *(listController->getPlayList()))
+      {
+        listController->setSelected(playerController->getCurrentTrackName());
+      }
+    });
   // prevTrackBtn
   connect(
         ui->prevTrackBtn,
-        SIGNAL (clicked(void)),
-        this->playerController,
-        SLOT (playPrevTrack(void))
-        );
+        &QPushButton::clicked,
+        [&](){
+      playerController->pause();
+      graphicController->stopUpdating();
+      playerController->playPrevTrack();
+      graphicController->startUpdating();
+      if (playerController->getPlaylist() != NULL &&
+        *(playerController->getPlaylist()) == *(listController->getPlayList()))
+      {
+        listController->setSelected(playerController->getCurrentTrackName());
+      }
+    });
   // durationChanged player
   connect(
         this->playerController,
         &PlayerController::trackDurationChanged,
         ui->slider,
-        &QSlider::setMaximum);
-  // trackChanged player
-  connect(
-        this->playerController,
-        &PlayerController::trackChanged,
-        [&](){
-        if (playerController->getPlaylist() != NULL &&
-            *(playerController->getPlaylist()) == *(listController->getPlayList()))
-          {
-            listController->setSelected(playerController->getCurrentTrackName());
-          }
-    });
-  // trackChanged player
-  connect(
-        this->playerController,
-        &PlayerController::trackChanging,
-        [&](){
-        graphicController->handleChangedTrack();
-    });
-  connect(
-        this->graphicController,
-        &GraphicController::readyToChange,
-        [&](){
-      player->playNextTrack();
-    });
+        &QSlider::setMaximum
+        );
+
   // replayTrackBtn
   connect(
         ui->replayTrackBtn,
@@ -244,12 +258,11 @@ void MainWindow::makeConnections()
         &PlayerController::trackPositionChanged,
         [&](int time){
       timingController->setValue(time);
-      int m, s, ms;
-      ms = time % 100 / 10;
+      int m, s;
       s = (time / 1000) % 60;
       m = (time / 60000) % 60;
       QString ttime;
-      ttime.sprintf("%.2i:%.2i:%.1i", m, s, ms);
+      ttime.sprintf("%.2i:%.2i", m, s);
       ui->currentTime->setText(ttime);
     });
 }

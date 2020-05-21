@@ -58,6 +58,7 @@ bool Graphic::isInitedEffect()
 void Graphic::setRedFlag(bool flag)
 {
   redFlag = flag;
+  qDebug() << "RED FLAG: " << redFlag;
 }
 
 bool Graphic::getRedFlag()

@@ -27,26 +27,32 @@ public:
   void handleChangedTrack();
   ~GraphicController();
 public slots:
+  void startUpdating();
+  void stopUpdating();
   void setVisualization(int);
   void setPlayerController(PlayerController * pc);
 signals:
   void changeVisualization(int);
   void readyToChange();
 private:
+  struct {
+    bool _isUpdating = false;
+    bool _isInited = false;
+    bool _synchronizedFlag = false;
+    bool _shutDown = false;
+    bool _updaterIsRunning = false;
+  } flags;
   void _setVisualization(int type);
   int nextVisType = 0;
   void initUpdaterThread();
   Logger * logger = NULL;
-  bool _isInited = false;
-  bool synchronizedFlag= false;
-  bool trackChanging = false;
-  bool _shutDown = false;
-  bool _updaterIsRunning = true;
+
   VisualizationTypes current;
   Visualization * vis;
   Graphic * graphic;
   std::thread * updater;
   PlayerController * playerController = NULL;
 };
+
 
 #endif // GRAPHICCONTROLLER_H

@@ -250,6 +250,7 @@ void Player::_loadPrevTrack()
 
 void Player::loadTrack(QString name)
 {
+  qDebug() << "123";
   if (name == "") return;
   TrackFile * tmp = trackFile;
   trackFile = decoder->decodeFile(QString("music/").append(name).toStdString());

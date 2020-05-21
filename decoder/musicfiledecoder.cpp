@@ -92,6 +92,7 @@ TrackFile *MusicFileDecoder::decodeMP3(std::string path)
   int name_pos = (t1 > t2 ? t1 : t2);
   std::string name = path.substr(name_pos + 1, ext_pos);
   //char * data = temp->data();
+
   char * data = new char[totalBytes];
   for(int i = 0; i < totalBytes; ++i){
       data[i] = temp->at(i);

@@ -1,7 +1,7 @@
 #include "graphiccontroller.h"
 
 GraphicController::GraphicController(QObject *parent) :
-  QObject(parent), _isInited(false), current(NONE), vis(NULL), graphic(NULL), updater(NULL)
+  QObject(parent), current(NONE), vis(NULL), graphic(NULL), updater(NULL)
 {
   connect(
         this,
@@ -15,12 +15,12 @@ GraphicController::GraphicController(QObject *parent) :
 void GraphicController::init(Graphic * w)
 {
   graphic = w;
-  _isInited = true;
+  flags._isInited = true;
 }
 
 bool GraphicController::isInited()
 {
-  return _isInited;
+  return flags._isInited;
 }
 
 void GraphicController::delaySet(VisualizationTypes type)
@@ -46,13 +46,13 @@ void GraphicController::handleChangedTrack()
   LOG(Logger::Message, "Wait while graphic widget still updating");
   while(graphic->isUpdating());
   emit readyToChange();
-  trackChanging = true;
+  //trackChanging = true;
 }
 
 GraphicController::~GraphicController()
 {
-  _shutDown = true;
-  while(_updaterIsRunning);
+  flags._shutDown = true;
+  while(flags._updaterIsRunning);
   graphic->setRedFlag(true);
   while(graphic->isUpdating());
   graphic->deInitEffect();
@@ -60,17 +60,27 @@ GraphicController::~GraphicController()
   delete updater;
 }
 
+void GraphicController::startUpdating()
+{
+  graphic->setRedFlag(false);
+  flags._isUpdating = true;
+}
+
+void GraphicController::stopUpdating()
+{
+  flags._isUpdating = false;
+  qDebug() << "PUSSY1";
+  graphic->setRedFlag(true);
+  qDebug() << "PUSSY2";
+  while(graphic->isUpdating());
+  qDebug() << "PUSSY3";
+}
+
 void GraphicController::setVisualization(int type)
 {
-  LOG(Logger::Message, "Start visualization changing");
-  nextVisType = type;
-  LOG(Logger::Message, "Wait for graphic updater thread");
-  while(!synchronizedFlag);
-  _setVisualization(nextVisType);
-  LOG(Logger::Message, "New effect was create and initialize");
-  nextVisType = -1;
-  graphic->setRedFlag(false);
-  synchronizedFlag = false;
+  stopUpdating();
+  _setVisualization(type);
+  startUpdating();
 }
 
 void GraphicController::setPlayerController(PlayerController *pc)
@@ -121,39 +131,25 @@ void GraphicController::initUpdaterThread()
   LOG(Logger::Message, "Start graphic updater thread");
   #define logger_name gc->logger
   updater = new std::thread([](int gcPtr){
+      // getting variables
       GraphicController * gc = (GraphicController*)gcPtr;
       Graphic * graphic = gc->graphic;
+      auto flags = &gc->flags;
+
+      flags->_updaterIsRunning = true;
+      // wait till not initialized
+      while(!flags->_isInited) _sleep(100);
+      // starting updating loop
       while(true){
-          while(graphic->isInitedEffect() && gc->nextVisType == -1 && !(gc->trackChanging) && !gc->_shutDown){
-              graphic->update();
-              _sleep(68);
-            }
-          if (gc->trackChanging){
-              LOG(Logger::Message, "Wait while player still playing");
-              while(!gc->playerController->isPlaying());
-              LOG(Logger::Message, "Resume graphic updating");
-              gc->trackChanging = false;
-              graphic->setRedFlag(false);
-              LOG(Logger::Message, "End track changing handling in graphic updater thread");
-            }
-          if (gc->nextVisType != -1){
-              LOG(Logger::Message, "Visualization changing in graphic updater thread");
-              graphic->setRedFlag(true);
-              LOG(Logger::Message, "Wait while graphic widget still updating");
-              while(graphic->isUpdating()){
-                  _sleep(10);
-                }
-              LOG(Logger::Message, "Wait for main thread set up new visualization");
-              gc->synchronizedFlag = true;
-              while(gc->synchronizedFlag);
-              LOG(Logger::Message, "End visualization changing");
-            }
-          if (gc->_shutDown){
-              break;
-            }
-          _sleep(68);
+           // updating
+           while (flags->_isUpdating){
+               graphic->update();
+               _sleep(68);
+             }
+           if (flags->_shutDown) break;
+           _sleep(60);
         }
-      gc->_updaterIsRunning = false;
+      flags->_updaterIsRunning = false;
     }, (int)this);
   #define logger_name logger
 

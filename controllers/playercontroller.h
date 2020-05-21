@@ -30,18 +30,19 @@ public:
 signals:
   void trackPositionChanged(int pos);
   void trackDurationChanged(int duration);
-  void trackChanged();
-  void trackChanging();
+  void trackEnded();
 public slots:
   void setTime(int);
   void start();
   void setVolume(float);
+  void pause();
   void playPause();
   void playNextTrack();
   void playPrevTrack();
 
 private:
   void initUpdater();
+  bool _clickFlag = false;
   bool isInited = false;
   Player * player = NULL;
   std::thread * updater = NULL;

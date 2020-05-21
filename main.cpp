@@ -42,7 +42,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 int main(int argc, char *argv[])
 {
   // Если расскоментить эти строчки, то вывод будет в логгер
-  qInstallMessageHandler(myMessageOutput); // Install the handler
+  //qInstallMessageHandler(myMessageOutput); // Install the handler
   QApplication a(argc, argv);
   MainWindow w(&logger);
   w.show();

@@ -29,6 +29,7 @@ public:
   void toFirstSong();
   void toLastSong();
   void setPosition(int index);
+  int getPosition(){ return currentSong;}
   void setSong(QString);
   static void createPlaylist(QString const & name, PlayList * pl){
     QFile file(FileAssistant::getPlaylistsPath() + "/" + name + ".txt");

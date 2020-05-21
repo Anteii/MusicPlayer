@@ -51,10 +51,11 @@ void GraphicController::handleChangedTrack()
 
 GraphicController::~GraphicController()
 {
-  flags._shutDown = true;
-  while(flags._updaterIsRunning);
+  stopUpdating();
   graphic->setRedFlag(true);
   while(graphic->isUpdating());
+  flags._shutDown = true;
+  while(flags._updaterIsRunning);
   graphic->deInitEffect();
   delete vis;
   delete updater;

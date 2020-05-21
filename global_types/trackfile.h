@@ -6,10 +6,10 @@ class TrackFile
 public:
   TrackFile(const char* _name, const char* _ext,
             unsigned short _numChannels, unsigned long _sampleRate,
-            char * _data, unsigned int _size);
+            int _bitRate, char * _data, unsigned int _size);
   unsigned short getNumChannels();
   unsigned long getSampleRate();
-  unsigned long getByteRate();
+  unsigned long getBitRate();
   unsigned int getSize();
   short getBitsPerSample();
   char * getData();
@@ -19,6 +19,7 @@ private:
   const char * ext;
   unsigned short numChannels;
   unsigned long sampleRate;
+  int bitRate;
   unsigned long byteRate;
   short bitsPerSample;
   char * data;

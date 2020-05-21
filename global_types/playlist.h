@@ -24,13 +24,17 @@ public:
   QString getNextSong();
   QString getPrevSong();
   QString getSong();
+
   QList<QString>* getSongList();
   QString getREPFileName();
+
+  void setSong(QString);
   void toFirstSong();
   void toLastSong();
+
   void setPosition(int index);
   int getPosition(){ return currentSong;}
-  void setSong(QString);
+
   static void createPlaylist(QString const & name, PlayList * pl){
     QFile file(FileAssistant::getPlaylistsPath() + "/" + name + ".txt");
     file.open(QIODevice::WriteOnly | QIODevice::Text);

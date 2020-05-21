@@ -59,7 +59,7 @@ TrackFile *MusicFileDecoder::decodeWAV(std::string path)
   int t2 = path.find_last_of("\\");
   int name_pos = (t1 > t2 ? t1 : t2);
   std::string name = path.substr(name_pos + 1, ext_pos - 1);
-  return new TrackFile(name.c_str(), ext.c_str(), mf->header.numChannels, mf->header.sampleRate, (char*)mf->samplesBuffer.arr, mf->samplesBuffer.size);
+  return new TrackFile(name.c_str(), ext.c_str(), mf->header.numChannels, mf->header.sampleRate, mf->header.byteRate * 8, (char*)mf->samplesBuffer.arr, mf->samplesBuffer.size);
 }
 
 TrackFile *MusicFileDecoder::decodeMP3(std::string path)
@@ -72,14 +72,16 @@ TrackFile *MusicFileDecoder::decodeMP3(std::string path)
   mpg123_getformat(
           mh, &rate, &channels, &encoding
   );
-
+  mpg123_frameinfo info;
+  mpg123_info(mh, &info);
+  qDebug() << info.rate << " " << info.bitrate;
   std::vector<char> *temp = new std::vector<char>;
   std::size_t done;
   int totalBytes = 0;
 
   for (; mpg123_read(mh, buffer, buffer_size, &done) == MPG123_OK; ) {
           //short* tst = reinterpret_cast<short*>(buffer);
-          for (int i = 0; i < buffer_size; i++) {
+          for (int i = 0; i < done; i++) {
                   temp->push_back(buffer[i]);
           }
           totalBytes += done;
@@ -94,11 +96,15 @@ TrackFile *MusicFileDecoder::decodeMP3(std::string path)
   //char * data = temp->data();
 
   char * data = new char[totalBytes];
+  auto x = temp->at(temp->size()-1);
+  qDebug() << temp->size() << " " << totalBytes << " " << x;
   for(int i = 0; i < totalBytes; ++i){
       data[i] = temp->at(i);
     }
   delete temp;
-  TrackFile * t = new TrackFile(name.c_str(), ext.c_str(), channels, rate, data, totalBytes);
+
+  TrackFile * t = new TrackFile(name.c_str(), ext.c_str(), channels, rate, info.bitrate, data, totalBytes);
+
   return t;
 }
 

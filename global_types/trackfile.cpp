@@ -2,10 +2,11 @@
 
 TrackFile::TrackFile(const char* _name, const char* _ext,
                      unsigned short _numChannels, unsigned long _sampleRate,
-                     char * _data, unsigned int _size) :
-  name(_name), ext(_ext), numChannels(_numChannels), sampleRate(_sampleRate), data(_data), size(_size)
+                     int _bitRate, char * _data, unsigned int _size) :
+  name(_name), ext(_ext), numChannels(_numChannels), sampleRate(_sampleRate),
+  bitRate(_bitRate), data(_data), size(_size)
 {
-
+  bitsPerSample = bitRate * 1024 * 8 / numChannels / sampleRate;
 }
 
 unsigned short TrackFile::getNumChannels()
@@ -18,9 +19,9 @@ unsigned long TrackFile::getSampleRate()
   return sampleRate;
 }
 
-unsigned long TrackFile::getByteRate()
+unsigned long TrackFile::getBitRate()
 {
-  return byteRate;
+  return bitRate;
 }
 
 unsigned int TrackFile::getSize()
@@ -40,7 +41,5 @@ char *TrackFile::getData()
 
 TrackFile::~TrackFile()
 {
-  delete[] name;
-  delete[] ext;
   delete[] (char*) data;
 }

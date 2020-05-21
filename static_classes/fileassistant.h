@@ -25,7 +25,7 @@ public:
       }
   }
   static inline bool checkIfFileExist(QString const & name){
-    return QFile::exists(getTracksPath() + "\\" + name);
+    return QFile::exists(getRootPath() + "//" + name);
   }
   static QString getPlaylistsPath() {
     QDir temp = QDir::current();

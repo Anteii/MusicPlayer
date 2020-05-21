@@ -44,18 +44,30 @@ PlayList::~PlayList()
 QString PlayList::getNextSong()
 {
   if (currentSong == list->length() - 1) return "";
-  return list->at(++currentSong);
+  QString songName = list->at(++currentSong);
+  if (FileAssistant::checkIfFileExist("music//" + songName))
+    return songName;
+  else
+    return "";
 }
 
 QString PlayList::getPrevSong()
 {
   if(currentSong == 0) return "";
-  return list->at(--currentSong);
+  QString songName = list->at(--currentSong);
+  if (FileAssistant::checkIfFileExist("music//" + songName))
+    return songName;
+  else
+    return "";
 }
 
 QString PlayList::getSong()
 {
-  return list->at(currentSong);
+  QString songName = list->at(currentSong);
+  if (FileAssistant::checkIfFileExist("music//" + songName))
+    return songName;
+  else
+    return "";
 }
 
 void PlayList::toFirstSong()

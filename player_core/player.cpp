@@ -254,6 +254,7 @@ void Player::loadTrack(QString name)
   if (name == "") return;
   TrackFile * tmp = trackFile;
   trackFile = decoder->decodeFile(QString("music/").append(name).toStdString());
+  qDebug() << "bits: " << trackFile->getBitsPerSample();
   if (tmp != NULL) {
       delete tmp;
     }
@@ -338,6 +339,7 @@ Player::~Player()
 {
   delete decoder;
   if (trackFile != NULL) delete trackFile;
+  pause();
   this->setPlaylist(NULL);
   deinitOAL();
 }

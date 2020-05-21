@@ -14,7 +14,7 @@ double FourierDecomposition::getY(double x, bool isRightChannel) {
     }
     else
     {
-        short int* arr = (short int*)player->getTrackFile()->getData();
+        short* arr = reinterpret_cast<short*>(player->getTrackFile()->getData());
         if (player->getTrackFile()->getNumChannels() == 1) return arr[(int)x];
         else if (isRightChannel) return arr[(int)x * 2 + 1];
         else return arr[(int)x * 2];

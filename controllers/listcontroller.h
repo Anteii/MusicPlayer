@@ -8,7 +8,7 @@
 #include "global_types/playlist.h"
 #include "static_classes/fileassistant.h"
 #include "logger/logger.h"
-
+#include <vector>
 class ListController : public QObject
 {
   Q_OBJECT

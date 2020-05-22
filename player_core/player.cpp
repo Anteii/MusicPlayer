@@ -54,19 +54,19 @@ int Player::getDurationOfTrack()
   return duration;
 }
 
-QString Player::getCurrentTrackName()
+std::string Player::getCurrentTrackName()
 {
   if (currentPlayList == NULL) return "";
-  return currentPlayList->getSong();
+  return currentPlayList->getCurrentSong();
 }
 
-QString Player::getRandTrackName()
+std::string Player::getRandTrackName()
 {
   if (currentPlayList == NULL) return "";
   int len = currentPlayList->getSongCount();
   int index = rand() % len;
   currentPlayList->setPosition(index);
-  return currentPlayList->getSong();
+  return currentPlayList->getCurrentSong();
 }
 
 TrackFile *Player::getTrackFile()
@@ -153,7 +153,7 @@ void Player::setVolume(float v)
 void Player::start()
 {
   pause();
-  loadTrack(currentPlayList->getSong());
+  loadTrack(currentPlayList->getCurrentSong());
   play();
 }
 
@@ -202,10 +202,10 @@ void Player::_loadNextTrack()
 {
   if (!isReady) return;
 
-  QString name;
+  std::string name;
 
   if(_isLoopedTrack){
-      name = currentPlayList->getSong();
+      name = currentPlayList->getCurrentSong();
     }
   else if (_isRandTrack){
       name = getRandTrackName();
@@ -215,7 +215,7 @@ void Player::_loadNextTrack()
       if (name == ""){
           if(isLoopedPlaylist()){
               currentPlayList->toFirstSong();
-              name = currentPlayList->getSong();
+              name = currentPlayList->getCurrentSong();
             }
           else return;
         }
@@ -227,9 +227,9 @@ void Player::_loadNextTrack()
 void Player::_loadPrevTrack()
 {
   if (!isReady) return;
-  QString name;
+  std::string name;
   if(_isLoopedTrack){
-      name = currentPlayList->getSong();
+      name = currentPlayList->getCurrentSong();
     }
   else if (_isRandTrack){
       name = getRandTrackName();
@@ -239,7 +239,7 @@ void Player::_loadPrevTrack()
       if (name == ""){
           if(isLoopedPlaylist()){
               currentPlayList->toLastSong();
-              name = currentPlayList->getSong();
+              name = currentPlayList->getCurrentSong();
             }
           else return;
         }
@@ -248,12 +248,12 @@ void Player::_loadPrevTrack()
   loadTrack(name);
 }
 
-void Player::loadTrack(QString name)
+void Player::loadTrack(const std::string& name)
 {
   qDebug() << "123";
   if (name == "") return;
   TrackFile * tmp = trackFile;
-  trackFile = decoder->decodeFile(QString("music/").append(name).toStdString());
+  trackFile = decoder->decodeFile(std::string("music/").append(name));
   qDebug() << "bits: " << trackFile->getBitsPerSample();
   if (tmp != NULL) {
       delete tmp;

@@ -1,5 +1,7 @@
 #include "listcontroller.h"
 
+#include <QFileDialog>
+
 
 ListController::ListController(QObject *parent) : QObject(parent)
 {
@@ -44,9 +46,11 @@ void ListController::addGoBack()
 void ListController::loadTracks()
 {
   if(!isInited || currentPlayList == NULL) return;
-  QList<QString> * temp = currentPlayList->getSongList();
-  for (int i = 0; i < temp->length(); ++i) {
-      addTrack(temp->at(i));
+  std::vector<std::string> * temp = currentPlayList->getSongList();
+  for (int i = 0; i < temp->size(); ++i) {
+      qDebug() << temp->at(i).c_str();
+      qDebug() << QString(temp->at(i).c_str());
+      addTrack(QString(temp->at(i).c_str()));
     }
   _whatDisplays = TRACKS;
 }
@@ -83,9 +87,10 @@ ListController::contentType ListController::whatDisplays()
 void ListController::setSelected(QString name)
 {
   if (_whatDisplays != TRACKS) return;
-  QList<QString> * temp = currentPlayList->getSongList();
-  for (int i = 0; i < temp->length(); ++i) {
-      if(temp->at(i) == name){
+  qDebug() << name;
+  std::vector<std::string> * temp = currentPlayList->getSongList();
+  for (int i = 0; i < temp->size(); ++i) {
+      if(QString(temp->at(i).c_str()) == name){
           list->setCurrentRow(i + 1);
           return;
         }
@@ -103,6 +108,10 @@ void ListController::ProvideContextMenu(const QPoint &pos)
   {
       //list->takeItem(list->indexAt(pos).row());
   }
+  else{
+      QString fileName = QFileDialog::getOpenFileName( NULL,
+          tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
+    }
 }
 
 PlayList *ListController::getPlayList()

@@ -159,9 +159,13 @@ void MainWindow::makeConnections()
       playerController->playNextTrack();
       graphicController->startUpdating();
       if (playerController->getPlaylist() != NULL &&
-        *(playerController->getPlaylist()) == *(listController->getPlayList()))
+        playerController->getPlaylist()->getName() == listController->getPlayList()->getName())
       {
-        listController->setSelected(playerController->getCurrentTrackName());
+          listController->setPlaylist(playerController->getPlaylist()->clone());
+          listController->clear();
+          listController->addGoBack();
+          listController->loadTracks();
+          listController->setSelected(playerController->getCurrentTrackName());
       }
     });
   // prevTrackBtn
@@ -174,8 +178,13 @@ void MainWindow::makeConnections()
       playerController->playPrevTrack();
       graphicController->startUpdating();
       if (playerController->getPlaylist() != NULL &&
-        *(playerController->getPlaylist()) == *(listController->getPlayList()))
+        playerController->getPlaylist()->getName() == listController->getPlayList()->getName())
       {
+          qDebug() << "ASDHFGASHFGALSDHFGLHID";
+        listController->setPlaylist(playerController->getPlaylist()->clone());
+        listController->clear();
+        listController->addGoBack();
+        listController->loadTracks();
         listController->setSelected(playerController->getCurrentTrackName());
       }
     });
@@ -284,8 +293,7 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     LOG(Logger::Message, "Double click on list");
     if (type == "playlist"){
 
-        QFile temp(fileAssistance->getPlaylistPath(text));
-        PlayList* pl = new PlayList(temp);
+        PlayList* pl = new PlayList(fileAssistance->getPlaylistPath(text).toStdString());
 
         listController->clear();
         listController->setPlaylist(pl);
@@ -293,7 +301,7 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
         listController->loadTracks();
 
         if (player->getPlaylist() != NULL && *pl == *(player->getPlaylist())){
-            listController->setSelected(player->getCurrentTrackName());
+            listController->setSelected(playerController->getCurrentTrackName());
           }
 
         ui->ListType->setText("Tracks");
@@ -311,7 +319,7 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 
         // Configure playlist
         PlayList * temp = listController->getPlayList();
-        temp->setSong(text);
+        temp->setSong(text.toStdString());
 
         // Change playlist if need
         if (player->getPlaylist() == NULL || *(player->getPlaylist()) != *(temp)){
@@ -320,7 +328,7 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
           }
         else{
             qDebug() << "Playlist wasn't updated";
-            player->getPlaylist()->setSong(text);
+            player->getPlaylist()->setSong(text.toStdString());
           }
         playerController->start();
         ui->slider->setEnabled(true);

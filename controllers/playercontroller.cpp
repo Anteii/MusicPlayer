@@ -62,7 +62,7 @@ TrackFile *PlayerController::getTrackFile()
 
 QString PlayerController::getCurrentTrackName()
 {
-  return player->getCurrentTrackName();
+  return QString(player->getCurrentTrackName().c_str());
 }
 
 bool PlayerController::isLoopedTrack()

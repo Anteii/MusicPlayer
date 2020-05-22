@@ -2,7 +2,7 @@ QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QT += opengl
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -25,7 +25,7 @@ SOURCES += \
     fft/fourierdecomposition.cpp \
     forms/mainwindow.cpp                \
     forms/settingswindow.cpp \
-    global_types/playlist.cpp           \
+    global_types/playlist.cpp \
     global_types/trackfile.cpp \
     graphics/FourierDraw.cpp \
     graphics/graphic.cpp                \
@@ -79,6 +79,9 @@ DEPENDPATH += $$PWD/dep/openal/include
 INCLUDEPATH += $$PWD/dep/mpg123
 DEPENDPATH += $$PWD/dep/mpg123
 LIBS += $$PWD/dep/mpg123/libmpg123-0.dll
+
+LIBS += -lstdc++fs
+
 RESOURCES += \
     Icos.qrc \
     styles.qrc

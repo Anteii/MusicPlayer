@@ -41,3 +41,10 @@ void SettingsWindow::on_viz_2_clicked()
   visualizationType = GraphicController::FIRST;
   emit visTypeChanged(visualizationType);
 }
+
+void SettingsWindow::on_radioButton_clicked()
+{
+    LOG(Logger::Message, "Choose 'FOURIER' visualization");
+    visualizationType = GraphicController::FOURIER;
+    emit visTypeChanged(visualizationType);
+}

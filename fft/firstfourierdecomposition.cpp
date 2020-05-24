@@ -16,19 +16,19 @@ FirstFourierDecomposition::~FirstFourierDecomposition(){
 template <class T> void FirstFourierDecomposition::getCompl(T arr, int i, int Channels) {
     if(Channels == 0) {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[i+j] / 128.0);
+            tempArr[j].real(arr[i+j]);
             tempArr[j].imag(0);
         }
     }
     else if(Channels == 1) {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[2*(i+j)] / 128.0);
+            tempArr[j].real(arr[2*(i+j)]);
             tempArr[j].imag(0);
         }
     }
     else {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[2*(i+j) + 1] / 128.0);
+            tempArr[j].real(arr[2*(i+j) + 1]);
             tempArr[j].imag(0);
         }
     }
@@ -58,14 +58,14 @@ double* FirstFourierDecomposition::GetFrame(double x, int count) {
         short int* arr = (short int*)player->getTrackFile()->getData();
         if(player->getTrackFile()->getNumChannels() == 1) getCompl(arr, i, 0);
         else getCompl(arr, i, 1);
-        fft(tempArr, false);
+        fft(tempArr, true);
         for(int j = 0; j < count; ++j)
             res[2*j] = getMod(tempArr[j * size / count]);
         if((player->getTrackFile()->getNumChannels() == 1))
             for(int j = 0; j < count; ++j) res[2*j + 1] = res[2*j];
         else {
             getCompl(arr, i, 2);
-            fft(tempArr, false);
+            fft(tempArr, true);
             for(int j = 0; j < count; ++j)
                 res[2*j + 1] = getMod(tempArr[j * size / count]);
         }

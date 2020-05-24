@@ -7,9 +7,10 @@
 #include "graphics/visualization.h"
 #include "player_core/player.h"
 #include "static_classes/fileassistant.h"
-#include "fft/fourierdecomposition.h"
+#include "fft/firstfourierdecomposition.h"
 
 class FourierDraw : public Visualization {
+    int index = 0;
     FourierDecomposition* dec;
     double* currFrame;
     PlayerController * pc;
@@ -18,7 +19,7 @@ class FourierDraw : public Visualization {
     GLuint vertexbuffer;
     GLfloat* g_vertex_buffer_data;
 public:
-    FourierDraw(OGLF * f);
+    FourierDraw(OGLF * f, int index);
     void init() override;
     void deInit() override;
     void update() override;

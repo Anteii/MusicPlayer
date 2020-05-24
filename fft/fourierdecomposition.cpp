@@ -6,7 +6,7 @@ FourierDecomposition::FourierDecomposition(PlayerController *player) {
 double FourierDecomposition::getY(double x, bool isRightChannel) {
     x += 0.05;
     x *= player->getTrackFile()->getSampleRate();
-    unsigned int t = x - 2;
+    unsigned int t = x;
     if (player->getTrackFile()->getBitsPerSample() == 8)
     {
         char* arr = player->getTrackFile()->getData();
@@ -15,7 +15,7 @@ double FourierDecomposition::getY(double x, bool isRightChannel) {
             else return 0;
         t <<= 1;
         if(t >= player->getTrackFile()->getSize()) return 0;
-        if (isRightChannel) return arr[t + 1];
+        if (isRightChannel) return arr[t - 1];
         else return arr[t];
     }
     else
@@ -25,8 +25,8 @@ double FourierDecomposition::getY(double x, bool isRightChannel) {
             if(t < player->getTrackFile()->getSize())return arr[t];
             else return 0;
         t <<= 1;
-        if(t >= player->getTrackFile()->getSize()) return 0;
-        if (isRightChannel) return arr[t + 1];
+        if(t >= player->getTrackFile()->getSize() >> 1) return 0;
+        if (isRightChannel) return arr[t - 1];
         else return arr[t];
     }
 }

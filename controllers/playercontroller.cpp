@@ -203,6 +203,6 @@ int PlayerController::showErrorBox()
   msgBox.setWindowTitle("");
   msgBox.setText("Let's celbrate");
   msgBox.setStyleSheet(QString::fromUtf8(("QPushButton{ width:200px; height:50px; background-color: rgb(56, 75, 44); color: white;} QMessageBox{ background-color: rgb(0, 75, 141); color: white; } ")));
-  msgBox.setInformativeText("And suck some dicks");
+  msgBox.setInformativeText("File can not be found");
   return msgBox.exec();
 }

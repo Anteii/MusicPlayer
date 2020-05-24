@@ -25,6 +25,8 @@ private slots:
   void on_viz_1_clicked();
   void on_viz_2_clicked();
 
+  void on_radioButton_clicked();
+
 signals:
   void visTypeChanged(int);
 private:

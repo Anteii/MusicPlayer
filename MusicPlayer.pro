@@ -22,6 +22,7 @@ SOURCES += \
     controllers/timingcontroller.cpp    \
     controllers/volumecontroller.cpp    \
     decoder/musicfiledecoder.cpp        \
+    fft/firstfourierdecomposition.cpp \
     fft/fourierdecomposition.cpp \
     forms/errorwindow.cpp \
     forms/mainwindow.cpp                \
@@ -44,6 +45,7 @@ HEADERS += \
     controllers/timingcontroller.h      \
     controllers/volumecontroller.h      \
     decoder/musicfiledecoder.h          \
+    fft/firstfourierdecomposition.h \
     fft/fourierdecomposition.h \
     forms/errorwindow.h \
     forms/mainwindow.h                  \

@@ -16,7 +16,7 @@ class GraphicController : public QObject
   Q_OBJECT
 public:
   enum VisualizationTypes{
-    NONE, TEST, FIRST
+    NONE, TEST, FIRST, FOURIER
   };
 
   explicit GraphicController(QObject *parent = nullptr);

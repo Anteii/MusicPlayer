@@ -115,6 +115,12 @@ void MainWindow::initGraphicController()
 
 void MainWindow::makeConnections()
 {
+  connect(this, SIGNAL (askSetEnabledToControls(bool)),
+          this, SLOT(setEnabledControls(bool)), Qt::QueuedConnection);
+  connect(this, SIGNAL (askSetPlayBtn()),
+          this, SLOT(SetPlayBtn()), Qt::QueuedConnection);
+  connect(this, SIGNAL (askSetPauseBtn()),
+          this, SLOT(SetPauseBtn()), Qt::QueuedConnection);
   // Трек сам закончился
   connect(playerController,
           &PlayerController::trackEnded,
@@ -122,13 +128,17 @@ void MainWindow::makeConnections()
       playerController->pause();
       graphicController->stopUpdating();
       if (playerController->playNextTrack()){
-          setEnabledToControl(false);
-          Styler::setBtnPlay(ui->playPauseBtn);
+          emit askSetEnabledToControls(false);
+          emit askSetPlayBtn();
+          //setEnabledToControl(false);
+          //Styler::setBtnPlay(ui->playPauseBtn);
           return;
         }
       else{
-          setEnabledToControl(true);
-          Styler::setBtnPause(ui->playPauseBtn);
+          emit askSetEnabledToControls(true);
+          emit askSetPauseBtn();
+          //setEnabledToControl(true);
+          //Styler::setBtnPause(ui->playPauseBtn);
         }
       graphicController->startUpdating();
       if (playerController->getPlaylist() != NULL &&
@@ -372,4 +382,22 @@ void MainWindow::on_actionVisualization_settings_triggered()
 {
   LOG(Logger::Message, "Settings window was triggered from menu tab");
   settingsWindow->show();
+}
+
+void MainWindow::setEnabledToControls(bool flag)
+{
+  ui->playPauseBtn->setEnabled(flag);
+  ui->nextTrackBtn->setEnabled(flag);
+  ui->prevTrackBtn->setEnabled(flag);
+  ui->slider->setEnabled(flag);
+}
+
+void MainWindow::setPauseBtn()
+{
+  Styler::setBtnPause(ui->playPauseBtn);
+}
+
+void MainWindow::setPlayBtn()
+{
+  Styler::setBtnPause(ui->playPauseBtn);
 }

@@ -54,15 +54,19 @@ int Player::getDurationOfTrack()
   return duration;
 }
 
-std::string Player::getCurrentTrackName()
+TrackInfo Player::getCurrentTrack()
 {
-  if (currentPlayList == NULL) return "";
+  if (currentPlayList == NULL)
+    throw std::logic_error(std::string("Playlist isn't set"));
+
   return currentPlayList->getCurrentSong();
 }
 
-std::string Player::getRandTrackName()
+TrackInfo Player::getRandTrack()
 {
-  if (currentPlayList == NULL) return "";
+  if (currentPlayList == NULL)
+    throw std::logic_error(std::string("Playlist isn't set"));
+
   int len = currentPlayList->getSongCount();
   int index = rand() % len;
   currentPlayList->setPosition(index);
@@ -202,59 +206,48 @@ void Player::_loadNextTrack()
 {
   if (!isReady) return;
 
-  std::string name;
-
-  if(_isLoopedTrack){
-      name = currentPlayList->getCurrentSong();
-    }
-  else if (_isRandTrack){
-      name = getRandTrackName();
-    }
-  else{
-      name = currentPlayList->getNextSong();
-      if (name == ""){
-          if(isLoopedPlaylist()){
-              currentPlayList->toFirstSong();
-              name = currentPlayList->getCurrentSong();
-            }
-          else return;
-        }
-    }
-
-  loadTrack(name);
+  try {
+    if (_isLoopedTrack)
+      setTime(0);
+    else if (_isRandTrack){
+        loadTrack(getRandTrack());
+      }
+    else{
+        loadTrack(currentPlayList->getNextSong());
+      }
+  } catch (std::out_of_range) {
+    if (_isLoopedPlaylist){
+        currentPlayList->toFirstSong();
+        loadTrack(currentPlayList->getCurrentSong());
+      }
+  }
 }
 
 void Player::_loadPrevTrack()
 {
   if (!isReady) return;
-  std::string name;
-  if(_isLoopedTrack){
-      name = currentPlayList->getCurrentSong();
-    }
-  else if (_isRandTrack){
-      name = getRandTrackName();
-    }
-  else{
-      name = currentPlayList->getPrevSong();
-      if (name == ""){
-          if(isLoopedPlaylist()){
-              currentPlayList->toLastSong();
-              name = currentPlayList->getCurrentSong();
-            }
-          else return;
-        }
-    }
-  //qDebug() << name;
-  loadTrack(name);
+
+  try {
+    if (_isLoopedTrack)
+      setTime(0);
+    else if (_isRandTrack){
+        loadTrack(getRandTrack());
+      }
+    else{
+        loadTrack(currentPlayList->getPrevSong());
+      }
+  } catch (std::out_of_range) {
+    if (_isLoopedPlaylist){
+        currentPlayList->toLastSong();
+        loadTrack(currentPlayList->getCurrentSong());
+      }
+  }
 }
 
-void Player::loadTrack(const std::string& name)
+void Player::loadTrack(const TrackInfo& track)
 {
-  qDebug() << "123";
-  if (name == "") return;
   TrackFile * tmp = trackFile;
-  trackFile = decoder->decodeFile(std::string("music/").append(name));
-  qDebug() << "bits: " << trackFile->getBitsPerSample();
+  trackFile = decoder->decodeFile(track.getPath());
   if (tmp != NULL) {
       delete tmp;
     }

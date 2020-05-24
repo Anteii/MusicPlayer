@@ -1,17 +1,15 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <QList>
-#include <QFile>
-#include <QDir>
 #include <QDebug>
-#include <QRegExp>
+
 #include <experimental/filesystem>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include "static_classes/fileassistant.h"
+#include "global_types/trackinfo.h"
 /*
 Playlist file format:
 Just lines including full path to file
@@ -27,13 +25,13 @@ public:
 
   ~PlayList();
   std::string getName();
-  std::string getNextSong();
-  std::string getPrevSong();
-  std::string getCurrentSong();
+  TrackInfo getNextSong();
+  TrackInfo getPrevSong();
+  TrackInfo getCurrentSong();
   int getSongCount();
-  std::vector<std::string>* getSongList();
+  std::vector<TrackInfo>* getSongList();
 
-  void setSong(const std::string &);
+  void setSong(const TrackInfo &);
   void toFirstSong();
   void toLastSong();
   PlayList* clone();
@@ -46,7 +44,7 @@ public:
     std::ofstream out(playlistsDirectory + "//" + name + ".txt");
     auto vec = pl->getSongList();
     for (int i = 0; i < vec->size(); ++i){
-        out << vec->at(i) << (i == vec->size() - 1 ? "" : "\n");
+        out << vec->at(i).getName() + "." +vec->at(i).getExt() << (i == vec->size() - 1 ? "" : "\n");
       }
     out.flush();
     out.close();
@@ -75,7 +73,7 @@ private:
   static std::string defaultTrackDirectory;
   std::string trackDirectory;
   std::string playlistName;
-  std::vector<std::string> list;
+  std::vector<TrackInfo> list;
   std::string supportedFormats[2] = {"wav", "mp3"};
   int currentSong;
 };

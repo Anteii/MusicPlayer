@@ -5,6 +5,7 @@
 #include <thread>
 #include "player_core/player.h"
 #include "logger/logger.h"
+#include "forms/errorwindow.h"
 
 class PlayerController : public QObject
 {
@@ -14,9 +15,9 @@ public:
   void initPlayer(Player * player);
 
   PlayList* getPlaylist();
-  MusicFile * getMusicFile();
+  void setPlaylist(PlayList * pl);
   TrackFile * getTrackFile();
-  QString getCurrentTrackName();
+  TrackInfo getCurrentTrack();
   bool isLoopedTrack();
   bool isRandTrack();
   void setRandTrack(bool);
@@ -33,17 +34,21 @@ signals:
   void trackEnded();
 public slots:
   void setTime(int);
-  void start();
+  int start();
   void setVolume(float);
   void pause();
   void playPause();
-  void playNextTrack();
-  void playPrevTrack();
+  int playNextTrack();
+  int playPrevTrack();
 
 private:
+  ErrorWindow * errWin;
+
+  int showErrorBox();
   void initUpdater();
   bool _clickFlag = false;
   bool isInited = false;
+  bool synhronizedFlag = false;
   Player * player = NULL;
   std::thread * updater = NULL;
   Logger * logger = NULL;

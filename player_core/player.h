@@ -40,8 +40,8 @@ public:
   // get track info
   int getCurrentPosition();
   int getDurationOfTrack();
-  std::string getCurrentTrackName();
-  std::string getRandTrackName();
+  TrackInfo getCurrentTrack();
+  TrackInfo getRandTrack();
   TrackFile * getTrackFile();
 
   // playlist manipulating
@@ -81,7 +81,7 @@ private:
   void loadTrackFile();
   void _loadNextTrack();
   void _loadPrevTrack();
-  void loadTrack(const std::string& name);
+  void loadTrack(const TrackInfo& rack);
   void listAudioDevice(const ALCchar* devices);
   void initOAL();
   void createSource();

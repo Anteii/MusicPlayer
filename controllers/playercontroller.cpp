@@ -1,8 +1,11 @@
 #include "playercontroller.h"
 
+#include <QMessageBox>
+
 PlayerController::PlayerController(QObject *parent) : QObject(parent)
 {
-
+  errWin = new ErrorWindow((QWidget*)parent);
+  errWin->setModal(true);
 }
 
 void PlayerController::initPlayer(Player *player)
@@ -35,10 +38,18 @@ void PlayerController::initUpdater()
               std::this_thread::sleep_for(std::chrono::milliseconds(60));
             }
           if (pc->_clickFlag) {
-            qDebug() << "Was clicked";
-            player->start();
-            emit pc->trackDurationChanged(player->getDurationOfTrack());
+            bool isErrOccur = false;
+            try {
+              player->start();
+            } catch (std::logic_error er) {
+              isErrOccur = true;
+              pc->synhronizedFlag = true;
+              while(pc->synhronizedFlag)
+                std::this_thread::sleep_for(std::chrono::milliseconds(60));
+            }
             pc->_clickFlag = false;
+            if (isErrOccur) continue;
+            emit pc->trackDurationChanged(player->getDurationOfTrack());
             continue;
           }
           if (player->isStopped()){
@@ -55,14 +66,19 @@ PlayList* PlayerController::getPlaylist()
   return player->getPlaylist();
 }
 
+void PlayerController::setPlaylist(PlayList *pl)
+{
+  player->setPlaylist(pl);
+}
+
 TrackFile *PlayerController::getTrackFile()
 {
   return player->getTrackFile();
 }
 
-QString PlayerController::getCurrentTrackName()
+TrackInfo PlayerController::getCurrentTrack()
 {
-  return QString(player->getCurrentTrackName().c_str());
+  return player->getCurrentTrack();
 }
 
 bool PlayerController::isLoopedTrack()
@@ -103,6 +119,7 @@ void PlayerController::setLogger(Logger *_logger)
 PlayerController::~PlayerController()
 {
   delete updater;
+  delete errWin;
 }
 
 void PlayerController::setTime(int time)
@@ -110,10 +127,20 @@ void PlayerController::setTime(int time)
   player->setTime(time);
 }
 
-void PlayerController::start()
+int PlayerController::start()
 {
-  _clickFlag = true;
+  if (!isInited) return 1;
   player->pause();
+  _clickFlag = true;
+  int errCode = 0;
+  while(_clickFlag){
+      if (synhronizedFlag){
+          errCode = 1;
+          showErrorBox();
+          synhronizedFlag = false;
+        }
+    }
+  return errCode;
 }
 
 void PlayerController::setVolume(float v)
@@ -132,18 +159,50 @@ void PlayerController::playPause()
   player->playPause();
 }
 
-void PlayerController::playNextTrack()
+int PlayerController::playNextTrack()
 {
-  if (!isInited) return;
+  if (!isInited) return 1;
+  bool isErrOccur = false;
   player->pause();
-  player->playNextTrack();
+  try {
+    player->playNextTrack();
+  } catch (std::out_of_range err) {
+    isErrOccur = true;
+    showErrorBox();
+  } catch (std::logic_error err){
+    isErrOccur = true;
+    showErrorBox();
+  }
+  if (isErrOccur) return 1;
   emit trackDurationChanged(player->getDurationOfTrack());
+  return 0;
 }
 
-void PlayerController::playPrevTrack()
+int PlayerController::playPrevTrack()
 {
-  if (!isInited) return;
+  if (!isInited) return 1;
+  bool isErrOccur = false;
   player->pause();
-  player->playPrevTrack();
+  try {
+    player->playPrevTrack();
+  } catch (std::out_of_range err) {
+    isErrOccur = true;
+    showErrorBox();
+  } catch (std::logic_error err){
+    isErrOccur = true;
+    showErrorBox();
+  }
+  if (isErrOccur) return 1;
   emit trackDurationChanged(player->getDurationOfTrack());
+  return 0;
+}
+
+int PlayerController::showErrorBox()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("");
+  msgBox.setText("Let's celbrate");
+  msgBox.setStyleSheet(QString::fromUtf8(("QPushButton{ width:200px; height:50px; background-color: rgb(56, 75, 44); color: white;} QMessageBox{ background-color: rgb(0, 75, 141); color: white; } ")));
+  msgBox.setInformativeText("And suck some dicks");
+  return msgBox.exec();
 }

@@ -47,7 +47,8 @@ private:
 signals:
 
 public slots:
-  void setSelected(QString name);
+  void setSelected(const TrackInfo& trackInfo);
+  void setSelected(int index);
   void ProvideContextMenu(const QPoint &pos);
 };
 

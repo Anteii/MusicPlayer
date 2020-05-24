@@ -46,11 +46,9 @@ void ListController::addGoBack()
 void ListController::loadTracks()
 {
   if(!isInited || currentPlayList == NULL) return;
-  std::vector<std::string> * temp = currentPlayList->getSongList();
+  std::vector<TrackInfo> * temp = currentPlayList->getSongList();
   for (int i = 0; i < temp->size(); ++i) {
-      qDebug() << temp->at(i).c_str();
-      qDebug() << QString(temp->at(i).c_str());
-      addTrack(QString(temp->at(i).c_str()));
+      addTrack(QString(temp->at(i).getName().c_str()));
     }
   _whatDisplays = TRACKS;
 }
@@ -84,17 +82,22 @@ ListController::contentType ListController::whatDisplays()
   return _whatDisplays;
 }
 
-void ListController::setSelected(QString name)
+void ListController::setSelected(const TrackInfo& trackInfo)
 {
   if (_whatDisplays != TRACKS) return;
-  qDebug() << name;
-  std::vector<std::string> * temp = currentPlayList->getSongList();
+  std::vector<TrackInfo> * temp = currentPlayList->getSongList();
   for (int i = 0; i < temp->size(); ++i) {
-      if(QString(temp->at(i).c_str()) == name){
+      if(temp->at(i) == trackInfo){
           list->setCurrentRow(i + 1);
           return;
         }
     }
+}
+
+void ListController::setSelected(int index)
+{
+  if (index < 1 || index > list->count()) return;
+  list->setCurrentRow(index + 1);
 }
 
 void ListController::ProvideContextMenu(const QPoint &pos)

@@ -49,7 +49,7 @@ private:
   void makeConnections();
   void initSettingsWindow();
   void initLogger();
-
+  void setEnabledToControl(bool);
   FileAssistant * fileAssistance = NULL;
   Player* player = NULL;
   ListController * listController = NULL;

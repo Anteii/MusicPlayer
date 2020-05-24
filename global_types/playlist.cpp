@@ -16,6 +16,7 @@ std::string getFileNameFromPath(const std::string& path){
     }
   return name;
 }
+
 PlayList::PlayList(const std::string& path) : PlayList()
 {
   const fs::path fsPath(path); // Constructing the path from a string is possible.
@@ -28,7 +29,7 @@ PlayList::PlayList(const std::string& path) : PlayList()
      for (const auto & entry : fs::directory_iterator(path)){
          temp = getFileNameFromPath(entry.path().string());
          if (isSupportedFile(temp)){
-            list.push_back(temp);
+            list.push_back(path + "//" + temp);
            }
        }
   }
@@ -40,7 +41,7 @@ PlayList::PlayList(const std::string& path) : PlayList()
       while(!in.eof()){
           std::getline(in, temp);
           if (isSupportedFile(temp)){
-              list.push_back(temp);
+              list.push_back(defaultTrackDirectory + "//" + temp);
             }
         }
       in.close();
@@ -48,7 +49,6 @@ PlayList::PlayList(const std::string& path) : PlayList()
   else{
       // Handling
   }
-  qDebug() << playlistName.c_str();
 }
 
 PlayList::PlayList(){
@@ -80,63 +80,34 @@ std::string PlayList::getName()
 
 // Iterating from currentSong to list.size()-1 position, deleting invalid tracks.
 // Then, if need, go backward also deleting invalid elements.
-std::string PlayList::getNextSong()
+TrackInfo PlayList::getNextSong()
 {
-  if (currentSong == list.size() - 1) return "";
-  std::ifstream checker;
-  while (++currentSong < list.size()){
-      checker.open(trackDirectory + "//" + getCurrentSong());
-      if (checker.good()) break;
-      list.erase(list.begin() + currentSong);
-      --currentSong;
-      checker.close();
-    }
-  if (currentSong == -1){
-      while(--currentSong > -1){
-          checker.open(trackDirectory + "//" + getCurrentSong());
-          if (checker.good()) break;
-          list.erase(list.begin() + currentSong);
-          ++currentSong;
-          checker.close();
-        }
-      if (list.size() == 0){
-          return "";
-        }
-    }
+  if (currentSong == list.size() - 1)
+    throw std::out_of_range(std::string("Playlist out of range"));
+  ++currentSong;
   return getCurrentSong();
 }
 
 // Iterating from currentSong to 0 position, deleting invalid tracks. Then, if need,
 // go forward also deleting invalid elements.
-std::string PlayList::getPrevSong()
+TrackInfo PlayList::getPrevSong()
 {
-  if(currentSong == 0) return "";
-  std::ifstream checker;
-  while (--currentSong > -1){
-      checker.open(trackDirectory + "//" + getCurrentSong());
-      if (checker.good()) break;
-      list.erase(list.begin() + currentSong);
-      ++currentSong;
-      checker.close();
-    }
-  if (currentSong == -1){
-      while(++currentSong < list.size()){
-          checker.open(trackDirectory + "//" + getCurrentSong());
-          if (checker.good()) break;
-          list.erase(list.begin() + currentSong);
-          --currentSong;
-          checker.close();
-        }
-      if (list.size() == 0){
-          return "";
-        }
-    }
+  if(currentSong == 0)
+    throw std::out_of_range(std::string("Playlist out of range"));
+  --currentSong;
   return getCurrentSong();
 }
 
-std::string PlayList::getCurrentSong()
+TrackInfo PlayList::getCurrentSong()
 {
-  return list.at(currentSong);
+  std::ifstream checker;
+  checker.open(list.at(currentSong).getPath());
+  if (checker.good()){
+      return list.at(currentSong);
+    }
+  throw std::logic_error(
+        list.at(currentSong).getName() + "." +list.at(currentSong).getExt() + " " +
+        "is invalid file.");
 }
 
 void PlayList::toFirstSong()
@@ -156,10 +127,10 @@ void PlayList::setPosition(int index)
     }
 }
 
-void PlayList::setSong(const std::string& name)
+void PlayList::setSong(const TrackInfo& track)
 {
   for(int i = 0; i < list.size(); ++i){
-      if (list.at(i) == name){
+      if (list.at(i) == track){
           currentSong = i;
           break;
         }
@@ -183,7 +154,7 @@ PlayList *PlayList::clone()
   return temp;
 }
 
-std::vector<std::string> *PlayList::getSongList()
+std::vector<TrackInfo> *PlayList::getSongList()
 {
   return &list;
 }

@@ -48,6 +48,28 @@ int Decoder::DecodeFile(MusicFile& musicFile, errno_t& err, const char* fileName
 	return 0;
 }
 
+std::string MusicFileDecoder::getFileName(const std::string &path)
+{
+  int namePos;
+  int nameEnd = path.size();
+  if ((namePos = path.find_last_of("/")) != std::string::npos);
+  else if ((namePos = path.find_last_of("\\")) != std::string::npos);
+  else namePos = 0;
+  if (path.find_last_of(".") != std::string::npos && path.find_last_of(".") > namePos)
+    nameEnd = path.find_last_of(".");
+  return path.substr(namePos + 1, nameEnd - namePos - 1);
+}
+
+std::string MusicFileDecoder::getFileExt(const std::string &path)
+{
+  int ext_pos = path.find_last_of('.');
+  std::string ext = path.substr(ext_pos + 1, path.size() - 1).c_str();
+  int t1 = path.find_last_of("/");
+  int t2 = path.find_last_of("\\");
+  int name_pos = (t1 > t2 ? t1 : t2);
+  std::string name = path.substr(name_pos + 1, ext_pos - 1);
+}
+
 TrackFile *MusicFileDecoder::decodeWAV(std::string path)
 {
   errno_t err;
@@ -64,6 +86,7 @@ TrackFile *MusicFileDecoder::decodeWAV(std::string path)
 
 TrackFile *MusicFileDecoder::decodeMP3(std::string path)
 {
+  auto tttt = getFileName(path);
   mpg123_open(mh, path.c_str());
   int channels;
   int encoding;
@@ -121,15 +144,18 @@ MusicFileDecoder::MusicFileDecoder()
 
 MusicFileDecoder::~MusicFileDecoder()
 {
-
-
   free(buffer);
   mpg123_close(mh);
   mpg123_delete(mh);
   mpg123_exit();
 }
 
-TrackFile* MusicFileDecoder::decodeFile(std::string path)
+std::string *MusicFileDecoder::getSupportedFormats()
+{
+  return supportedFormats;
+}
+
+TrackFile* MusicFileDecoder::decodeFile(const std::string& path)
 {
   int ext_pos = path.find_last_of('.');
   std::string ext = path.substr(ext_pos + 1, path.size() - 1).c_str();

@@ -23,10 +23,12 @@ SOURCES += \
     controllers/volumecontroller.cpp    \
     decoder/musicfiledecoder.cpp        \
     fft/fourierdecomposition.cpp \
+    forms/errorwindow.cpp \
     forms/mainwindow.cpp                \
     forms/settingswindow.cpp \
     global_types/playlist.cpp \
     global_types/trackfile.cpp \
+    global_types/trackinfo.cpp \
     graphics/FourierDraw.cpp \
     graphics/graphic.cpp                \
     graphics/ogltest.cpp                \
@@ -43,11 +45,13 @@ HEADERS += \
     controllers/volumecontroller.h      \
     decoder/musicfiledecoder.h          \
     fft/fourierdecomposition.h \
+    forms/errorwindow.h \
     forms/mainwindow.h                  \
     forms/settingswindow.h \
     global_types/musicfile.h            \
     global_types/playlist.h             \
     global_types/trackfile.h \
+    global_types/trackinfo.h \
     graphics/FourierDraw.h \
     graphics/graphic.h                  \
     graphics/ogltest.h                  \
@@ -60,6 +64,7 @@ HEADERS += \
 
 
 FORMS += \
+    forms/errorwindow.ui \
     forms/mainwindow.ui \
     forms/settingswindow.ui
 

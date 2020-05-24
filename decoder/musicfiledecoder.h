@@ -1,11 +1,12 @@
 #ifndef MUSICFILEDECODER_H
 #define MUSICFILEDECODER_H
 
-#include <iostream>
+#include <string>
+#include <vector>
+
 #include "global_types/musicfile.h"
 #include "global_types/trackfile.h"
 #include "dep/mpg123/mpg123.h"
-#include <vector>
 
 
 namespace Decoder {
@@ -15,6 +16,8 @@ namespace Decoder {
 class MusicFileDecoder{
 
 private:
+  std::string getFileName(const std::string& path);
+  std::string getFileExt(const std::string& path);
   std::string supportedFormats[2];
   mpg123_handle* mh;
   unsigned char* buffer;
@@ -25,6 +28,8 @@ private:
 public:
   MusicFileDecoder();
   ~MusicFileDecoder();
-  TrackFile* decodeFile(std::string name);
+
+  std::string* getSupportedFormats();
+  TrackFile* decodeFile(const std::string& path);
 };
 #endif // MUSICFILEDECODER_H

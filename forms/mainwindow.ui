@@ -60,7 +60,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="listWidget">
+         <widget class="MyList" name="listWidget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -91,7 +91,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QSlider" name="slider">
+       <widget class="MySlider" name="slider">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -546,6 +546,16 @@ border-radius: 4px;
    <class>Graphic</class>
    <extends>QOpenGLWidget</extends>
    <header>graphics/graphic.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MySlider</class>
+   <extends>QSlider</extends>
+   <header>widgets/myslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyList</class>
+   <extends>QListWidget</extends>
+   <header>widgets/mylist.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

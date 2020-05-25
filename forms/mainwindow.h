@@ -33,12 +33,14 @@ signals:
   void askSetEnabledToControls(bool);
   void askSetPauseBtn();
   void askSetPlayBtn();
-private slots:
-  void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
-  void on_actionVisualization_settings_triggered();
+public slots:
   void setEnabledToControls(bool);
   void setPauseBtn();
   void setPlayBtn();
+private slots:
+  void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+  void on_actionVisualization_settings_triggered();
+
 private:
   Ui::MainWindow *ui;
   void init();

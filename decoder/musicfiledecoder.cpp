@@ -95,6 +95,7 @@ TrackFile *MusicFileDecoder::decodeMP3(std::string path)
   mpg123_getformat(
           mh, &rate, &channels, &encoding
   );
+
   mpg123_frameinfo info;
   mpg123_info(mh, &info);
   qDebug() << info.rate << " " << info.bitrate;

@@ -149,7 +149,6 @@ void Player::setRandTrack(bool flag)
 
 void Player::setVolume(float v)
 {
-  if (!isReady) return;
   _volume = v;
   alSourcef(source, AL_GAIN, _volume);
 }

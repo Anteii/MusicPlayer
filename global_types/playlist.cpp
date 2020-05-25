@@ -1,5 +1,5 @@
 #include "playlist.h"
-namespace fs = std::experimental::filesystem;
+
 
 std::string PlayList::playlistsDirectory = "playlists";
 std::string PlayList::defaultTrackDirectory = "music";
@@ -36,7 +36,7 @@ PlayList::PlayList(const std::string& path) : PlayList()
   else if (fs::is_regular_file(path, ec))
   {
       namePos = path.find_last_of('.');
-      playlistName = getFileNameFromPath(path.substr(0, namePos - 1));
+      playlistName = getFileNameFromPath(path.substr(0, namePos));
       std::ifstream in(path);
       while(!in.eof()){
           std::getline(in, temp);
@@ -76,6 +76,11 @@ PlayList::~PlayList()
 std::string PlayList::getName()
 {
   return playlistName;
+}
+
+void PlayList::setName(const std::string & _name)
+{
+  playlistName = _name;
 }
 
 // Iterating from currentSong to list.size()-1 position, deleting invalid tracks.
@@ -137,9 +142,24 @@ void PlayList::setSong(const TrackInfo& track)
     }
 }
 
+int PlayList::size()
+{
+  return list.size();
+}
+
 int PlayList::getSongCount()
 {
   return list.size();
+}
+
+bool PlayList::contains(const TrackInfo &info)
+{
+  for(int i = 0; i < list.size(); ++i){
+      if (list.at(i) == info){
+          return true;
+        }
+    }
+  return false;
 }
 
 PlayList *PlayList::clone()

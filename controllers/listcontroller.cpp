@@ -1,6 +1,7 @@
 #include "listcontroller.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
 
 
 ListController::ListController(QObject *parent) : QObject(parent)
@@ -77,6 +78,15 @@ void ListController::setLogger(Logger *_logger)
   logger = _logger;
 }
 
+void ListController::updateTrackList(PlayList *pl)
+{
+  setPlaylist(pl->clone());
+  clear();
+  addGoBack();
+  loadTracks();
+  setSelected(pl->getPosition());
+}
+
 ListController::contentType ListController::whatDisplays()
 {
   return _whatDisplays;
@@ -96,7 +106,7 @@ void ListController::setSelected(const TrackInfo& trackInfo)
 
 void ListController::setSelected(int index)
 {
-  if (index < 1 || index > list->count()) return;
+  if (index < 0 || index > list->count()) return;
   list->setCurrentRow(index + 1);
 }
 
@@ -104,16 +114,47 @@ void ListController::ProvideContextMenu(const QPoint &pos)
 {
   QPoint item = list->mapToGlobal(pos);
   QMenu submenu;
-  submenu.addAction("ADD");
-  submenu.addAction("Delete");
-  QAction* rightClickItem = submenu.exec(item);
-  if (rightClickItem && rightClickItem->text().contains("Delete") )
-  {
-      //list->takeItem(list->indexAt(pos).row());
-  }
+  if (getSelectedIndex() != -1){
+      submenu.addAction("edit..");
+      submenu.addAction("delete..");
+    }
   else{
-      QString fileName = QFileDialog::getOpenFileName( NULL,
-          tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
+      submenu.addAction("add..");
+      submenu.addAction("update");
+    }
+  QAction* rightClickItem = submenu.exec(item);
+  if (rightClickItem && rightClickItem->text().contains("delete..") )
+  {
+      if (whatDisplays() == TRACKS) {
+          deleteTrack(getSelectedIndex());
+        }
+      else if (whatDisplays() == PLAYLISTS) {
+          deletePlaylist(getSelectedIndex());
+        }
+  }
+  else if (rightClickItem && rightClickItem->text().contains("add..") ){
+      if (whatDisplays() == TRACKS) {
+          addTrack(getSelectedIndex());
+        }
+      else if (whatDisplays() == PLAYLISTS) {
+          addPlaylist();
+        }
+    }
+  else if (rightClickItem && rightClickItem->text().contains("update") ){
+      if (whatDisplays() == TRACKS) {
+          clear();
+          addGoBack();
+          loadTracks();
+        }
+      else if (whatDisplays() == PLAYLISTS) {
+          clear();
+          loadPlaylists();
+        }
+    }
+  else if (rightClickItem && rightClickItem->text().contains("edit..") ){
+      if (whatDisplays() == PLAYLISTS) {
+          editPlaylist();
+        }
     }
 }
 
@@ -122,15 +163,71 @@ PlayList *ListController::getPlayList()
   return currentPlayList;
 }
 
+void ListController::deleteTrack(int ind)
+{
+
+}
+
+void ListController::addTrack(int ind)
+{
+
+}
+
+void ListController::deletePlaylist(int ind)
+{
+    QListWidgetItem* item = list->item(ind);
+    PlayList::deletePlaylistFile(item->text().toStdString());
+    clear();
+    loadPlaylists();
+}
+
+void ListController::addPlaylist()
+{
+  PlaylistConfigurationWindow win;
+  win.setModal(true);
+  win.setPlaylist();
+  //QString fileName = QFileDialog::getOpenFileName( NULL,
+  //tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
+  win.exec();
+}
+
+void ListController::editPlaylist()
+{
+  PlayList * pl = new PlayList(
+        PlayList::getPlaylistsDirectory() + "//" + getSelectedItem()->text().toStdString() + ".txt");
+  PlaylistConfigurationWindow win;
+  win.setModal(true);
+  win.setPlaylist(pl);
+  //QString fileName = QFileDialog::getOpenFileName( NULL,
+  //tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
+  win.exec();
+}
+
 void ListController::createItem(QString name, QString type, QString icoPath)
 {
   if(!isInited) return;
   QListWidgetItem * tempit = new QListWidgetItem;
-  //tempit = new QListWidgetItem;
   tempit->setText(name);
   tempit->setData(Qt::UserRole, QVariant(type));
   if (icoPath != 0){
       tempit->setIcon(QIcon(icoPath));
     }
   list->addItem(tempit);
+  if (type.indexOf("command") == -1){
+    }
+}
+
+int ListController::getSelectedIndex()
+{
+  for(int i = 0; i < list->count(); ++i){
+      if (list->item(i)->isSelected()) return i;
+    }
+  return -1;
+}
+
+QListWidgetItem *ListController::getSelectedItem()
+{
+  auto t = list->selectedItems();
+  if (t.size() == 0) return NULL;
+  return t.at(0);
 }

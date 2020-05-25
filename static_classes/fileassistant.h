@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
 
 
 class FileAssistant
@@ -43,6 +44,20 @@ public:
     QString result = QLatin1String(file.readAll());
     file.close();
     return result;
+  }
+  static int WriteFile(const QString& path, QList<QString>* list){
+    QFile file(path);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        for(int i = 0; i < list->size(); ++i){
+            stream << list->at(i) << '\n';
+          }
+        file.flush();
+        file.close();
+        return 0;
+    }
+    return -1;
   }
   static inline QString getStyle(QString const & type, QString const & fileName){
     return getFileContent(":/" + type + "/resources/styles/" + type + "/" + fileName + ".css");

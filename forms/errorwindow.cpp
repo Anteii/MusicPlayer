@@ -6,6 +6,7 @@ ErrorWindow::ErrorWindow(QWidget *parent) :
   ui(new Ui::ErrorWindow)
 {
   ui->setupUi(this);
+
 }
 
 ErrorWindow::~ErrorWindow()

@@ -14,6 +14,7 @@
 Playlist file format:
 Just lines including full path to file
 */
+namespace fs = std::experimental::filesystem;
 
 class PlayList
 {
@@ -25,20 +26,23 @@ public:
 
   ~PlayList();
   std::string getName();
+  void setName(const std::string & _name);
   TrackInfo getNextSong();
   TrackInfo getPrevSong();
   TrackInfo getCurrentSong();
   int getSongCount();
+  bool contains(const TrackInfo& info);
   std::vector<TrackInfo>* getSongList();
-
+  static std::string getPlaylistsDirectory(){ return playlistsDirectory; }
   void setSong(const TrackInfo &);
+  int size();
   void toFirstSong();
   void toLastSong();
   PlayList* clone();
   void setPosition(int index);
   int getPosition(){ return currentSong;}
 
-  static void createPlaylist(std::string& name, PlayList * pl){
+  static void createPlaylistFile(const std::string& name, PlayList * pl){
     // check if exist
     // .....
     std::ofstream out(playlistsDirectory + "//" + name + ".txt");
@@ -49,18 +53,20 @@ public:
     out.flush();
     out.close();
   }
-  static void createBasePlaylist(){
+  static void createBasePlaylistFile(){
     std::string name = "All tracks";
-    createPlaylist(name, new PlayList(defaultTrackDirectory));
+    createPlaylistFile(name, new PlayList(defaultTrackDirectory));
 
   }
   static PlayList * getBaseTrackPlaylist(){
     return new PlayList(defaultTrackDirectory);
   }
   static void updatePlaylistFile(PlayList * pl){
-    createPlaylist(pl->playlistName, pl);
+    createPlaylistFile(pl->playlistName, pl);
   }
-
+  static void deletePlaylistFile(const std::string & name){
+    std::remove( ( playlistsDirectory + "//" + name + ".txt").c_str() );
+  }
   bool operator==(const PlayList &) const;
   bool operator!=(const PlayList &) const;
 

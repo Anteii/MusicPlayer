@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #define logger_name logger
+
 MainWindow::MainWindow(Logger * _logger, QWidget *parent)
   : QMainWindow(parent), logger(_logger)
   , ui(new Ui::MainWindow)
@@ -48,7 +49,7 @@ void MainWindow::init()
 
 void MainWindow::initList()
 {
-  PlayList::createBasePlaylist();
+  PlayList::createBasePlaylistFile();
   listController = new ListController(this);
   listController->initList(ui->listWidget);
   listController->loadPlaylists();
@@ -116,11 +117,11 @@ void MainWindow::initGraphicController()
 void MainWindow::makeConnections()
 {
   connect(this, SIGNAL (askSetEnabledToControls(bool)),
-          this, SLOT(setEnabledControls(bool)), Qt::QueuedConnection);
+          this, SLOT(setEnabledToControls(bool)), Qt::QueuedConnection);
   connect(this, SIGNAL (askSetPlayBtn()),
-          this, SLOT(SetPlayBtn()), Qt::QueuedConnection);
+          this, SLOT(setPlayBtn()), Qt::QueuedConnection);
   connect(this, SIGNAL (askSetPauseBtn()),
-          this, SLOT(SetPauseBtn()), Qt::QueuedConnection);
+          this, SLOT(setPauseBtn()), Qt::QueuedConnection);
   // Трек сам закончился
   connect(playerController,
           &PlayerController::trackEnded,
@@ -130,21 +131,17 @@ void MainWindow::makeConnections()
       if (playerController->playNextTrack()){
           emit askSetEnabledToControls(false);
           emit askSetPlayBtn();
-          //setEnabledToControl(false);
-          //Styler::setBtnPlay(ui->playPauseBtn);
           return;
         }
       else{
           emit askSetEnabledToControls(true);
           emit askSetPauseBtn();
-          //setEnabledToControl(true);
-          //Styler::setBtnPause(ui->playPauseBtn);
         }
       graphicController->startUpdating();
       if (playerController->getPlaylist() != NULL &&
         *(playerController->getPlaylist()) == *(listController->getPlayList()))
       {
-        listController->setSelected(playerController->getCurrentTrack());
+        listController->setSelected(playerController->getPlaylist()->getPosition());
       }
     });
   // Двойной клик в плейлисте обрабатывается здесь on_listWidget_itemDoubleClicked
@@ -183,11 +180,7 @@ void MainWindow::makeConnections()
       if (playerController->getPlaylist() != NULL &&
         playerController->getPlaylist()->getName() == listController->getPlayList()->getName())
       {
-          listController->setPlaylist(playerController->getPlaylist()->clone());
-          listController->clear();
-          listController->addGoBack();
-          listController->loadTracks();
-          listController->setSelected(playerController->getCurrentTrack());
+          listController->updateTrackList(playerController->getPlaylist());
       }
     });
   // prevTrackBtn
@@ -210,12 +203,7 @@ void MainWindow::makeConnections()
       if (playerController->getPlaylist() != NULL &&
         playerController->getPlaylist()->getName() == listController->getPlayList()->getName())
       {
-          qDebug() << "ASDHFGASHFGALSDHFGLHID";
-        listController->setPlaylist(playerController->getPlaylist()->clone());
-        listController->clear();
-        listController->addGoBack();
-        listController->loadTracks();
-        listController->setSelected(playerController->getCurrentTrack());
+          listController->updateTrackList(playerController->getPlaylist());
       }
     });
   // durationChanged player
@@ -332,9 +320,8 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     if (type == "playlist"){
 
         PlayList* pl = new PlayList(fileAssistance->getPlaylistPath(text).toStdString());
-
+        listController->setPlaylist(pl->clone());
         listController->clear();
-        listController->setPlaylist(pl);
         listController->addGoBack();
         listController->loadTracks();
 

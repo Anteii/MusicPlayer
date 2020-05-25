@@ -5,10 +5,13 @@
 #include <QListWidget>
 #include <QMenu>
 
+#include <vector>
+
 #include "global_types/playlist.h"
 #include "static_classes/fileassistant.h"
 #include "logger/logger.h"
-#include <vector>
+#include "forms/playlistconfigurationwindow.h"
+
 class ListController : public QObject
 {
   Q_OBJECT
@@ -31,12 +34,19 @@ public:
 
   void setPlaylist(PlayList *);
   void setLogger(Logger * _logger);
+  void updateTrackList(PlayList * pl);
   contentType whatDisplays();
   PlayList * getPlayList();
 
 private:
-
+  void deleteTrack(int ind);
+  void addTrack(int ind);
+  void deletePlaylist(int ind);
+  void addPlaylist();
+  void editPlaylist();
   void createItem(QString name, QString contentType, QString icoPath = "");
+  int getSelectedIndex();
+  QListWidgetItem * getSelectedItem();
   Logger * logger = NULL;
   bool isInited = false;
   contentType _whatDisplays = PLAYLISTS;

@@ -26,6 +26,7 @@ SOURCES += \
     fft/fourierdecomposition.cpp \
     forms/errorwindow.cpp \
     forms/mainwindow.cpp                \
+    forms/playlistconfigurationwindow.cpp \
     forms/settingswindow.cpp \
     global_types/playlist.cpp \
     global_types/trackfile.cpp \
@@ -35,7 +36,9 @@ SOURCES += \
     graphics/ogltest.cpp                \
     logger/logger.cpp \
     main.cpp \
-    player_core/player.cpp
+    player_core/player.cpp \
+    widgets/mylist.cpp \
+    widgets/myslider.cpp
 
 
 HEADERS += \
@@ -49,6 +52,7 @@ HEADERS += \
     fft/fourierdecomposition.h \
     forms/errorwindow.h \
     forms/mainwindow.h                  \
+    forms/playlistconfigurationwindow.h \
     forms/settingswindow.h \
     global_types/musicfile.h            \
     global_types/playlist.h             \
@@ -62,12 +66,15 @@ HEADERS += \
     player_core/player.h \
     static_classes/fileassistant.h      \
     static_classes/styler.h \
-    static_classes/util.h
+    static_classes/util.h \
+    widgets/mylist.h \
+    widgets/myslider.h
 
 
 FORMS += \
     forms/errorwindow.ui \
     forms/mainwindow.ui \
+    forms/playlistconfigurationwindow.ui \
     forms/settingswindow.ui
 
 

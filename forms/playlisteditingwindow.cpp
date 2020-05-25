@@ -1,21 +1,24 @@
-#include "playlistconfigurationwindow.h"
+#include "playlisteditingwindow.h"
 #include "ui_playlistconfigurationwindow.h"
 
 #include <QMessageBox>
 
-PlaylistConfigurationWindow::PlaylistConfigurationWindow(QWidget *parent) :
+PlaylistEditingWindow::PlaylistEditingWindow(QWidget *parent) :
   QDialog(parent),
   ui(new Ui::PlaylistConfigurationWindow)
 {
   ui->setupUi(this);
+
+  setWindowTitle("Playlist");
+  this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/playlistEditingWindow.png"));
 }
 
-PlaylistConfigurationWindow::~PlaylistConfigurationWindow()
+PlaylistEditingWindow::~PlaylistEditingWindow()
 {
   delete ui;
 }
 
-void PlaylistConfigurationWindow::addTrack(TrackInfo track, bool checked)
+void PlaylistEditingWindow::addTrack(TrackInfo track, bool checked)
 {
   QListWidgetItem *item = new QListWidgetItem(
         QString((track.getName() + "." + track.getExt()).c_str()), ui->trackList);
@@ -24,7 +27,7 @@ void PlaylistConfigurationWindow::addTrack(TrackInfo track, bool checked)
   ui->trackList->addItem(item);
 }
 
-void PlaylistConfigurationWindow::setPlaylist(PlayList * _pl)
+void PlaylistEditingWindow::setPlaylist(PlayList * _pl)
 {
   pl = _pl;
   PlayList * alls = PlayList::getBaseTrackPlaylist();
@@ -47,14 +50,14 @@ void PlaylistConfigurationWindow::setPlaylist(PlayList * _pl)
     }
 }
 
-void PlaylistConfigurationWindow::setAllChecked()
+void PlaylistEditingWindow::setAllChecked()
 {
   for(int i = 0; i < ui->trackList->count(); ++i){
       ui->trackList->item(i)->setCheckState(Qt::Checked);
     }
 }
 
-void PlaylistConfigurationWindow::accept()
+void PlaylistEditingWindow::accept()
 {
   if (ui->playlistName->text() == "") {
       QMessageBox::warning(this, "Be carefull!", "Playlist name field is empty");

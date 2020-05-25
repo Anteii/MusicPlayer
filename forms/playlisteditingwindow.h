@@ -10,13 +10,13 @@ namespace Ui {
   class PlaylistConfigurationWindow;
 }
 
-class PlaylistConfigurationWindow : public QDialog
+class PlaylistEditingWindow : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit PlaylistConfigurationWindow(QWidget *parent = nullptr);
-  ~PlaylistConfigurationWindow();
+  explicit PlaylistEditingWindow(QWidget *parent = nullptr);
+  ~PlaylistEditingWindow();
   void addTrack(TrackInfo track, bool checked = false);
   void setPlaylist(PlayList * pl = NULL);
   void setAllChecked();

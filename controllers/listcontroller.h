@@ -10,7 +10,7 @@
 #include "global_types/playlist.h"
 #include "static_classes/fileassistant.h"
 #include "logger/logger.h"
-#include "forms/playlistconfigurationwindow.h"
+#include "forms/playlisteditingwindow.h"
 
 class ListController : public QObject
 {

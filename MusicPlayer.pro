@@ -26,7 +26,7 @@ SOURCES += \
     fft/fourierdecomposition.cpp \
     forms/errorwindow.cpp \
     forms/mainwindow.cpp                \
-    forms/playlistconfigurationwindow.cpp \
+    forms/playlisteditingwindow.cpp \
     forms/settingswindow.cpp \
     global_types/playlist.cpp \
     global_types/trackfile.cpp \
@@ -52,7 +52,7 @@ HEADERS += \
     fft/fourierdecomposition.h \
     forms/errorwindow.h \
     forms/mainwindow.h                  \
-    forms/playlistconfigurationwindow.h \
+    forms/playlisteditingwindow.h \
     forms/settingswindow.h \
     global_types/musicfile.h            \
     global_types/playlist.h             \
@@ -74,7 +74,7 @@ HEADERS += \
 FORMS += \
     forms/errorwindow.ui \
     forms/mainwindow.ui \
-    forms/playlistconfigurationwindow.ui \
+    forms/playlisteditingwindow.ui \
     forms/settingswindow.ui
 
 

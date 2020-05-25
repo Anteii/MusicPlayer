@@ -112,6 +112,7 @@ void ListController::setSelected(int index)
 
 void ListController::ProvideContextMenu(const QPoint &pos)
 {
+  if (whatDisplays() == TRACKS) return;
   QPoint item = list->mapToGlobal(pos);
   QMenu submenu;
   if (getSelectedIndex() != -1){
@@ -183,7 +184,7 @@ void ListController::deletePlaylist(int ind)
 
 void ListController::addPlaylist()
 {
-  PlaylistConfigurationWindow win;
+  PlaylistEditingWindow win;
   win.setModal(true);
   win.setPlaylist();
   //QString fileName = QFileDialog::getOpenFileName( NULL,
@@ -195,7 +196,7 @@ void ListController::editPlaylist()
 {
   PlayList * pl = new PlayList(
         PlayList::getPlaylistsDirectory() + "//" + getSelectedItem()->text().toStdString() + ".txt");
-  PlaylistConfigurationWindow win;
+  PlaylistEditingWindow win;
   win.setModal(true);
   win.setPlaylist(pl);
   //QString fileName = QFileDialog::getOpenFileName( NULL,

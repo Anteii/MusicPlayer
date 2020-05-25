@@ -8,7 +8,10 @@ PlaylistEditingWindow::PlaylistEditingWindow(QWidget *parent) :
   ui(new Ui::PlaylistConfigurationWindow)
 {
   ui->setupUi(this);
-
+  ui->trackList->setDragEnabled(true);
+  ui->trackList->setAcceptDrops(true);
+  ui->trackList->setDropIndicatorShown(true);
+  ui->trackList->setDefaultDropAction(Qt::MoveAction);
   setWindowTitle("Playlist");
   this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/playlistEditingWindow.png"));
 }

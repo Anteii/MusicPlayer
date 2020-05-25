@@ -33,7 +33,20 @@
       <widget class="QLineEdit" name="playlistName"/>
      </item>
      <item>
-      <widget class="QListWidget" name="trackList"/>
+      <widget class="QListWidget" name="trackList">
+       <property name="showDropIndicator" stdset="0">
+        <bool>true</bool>
+       </property>
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragDrop</enum>
+       </property>
+       <property name="defaultDropAction">
+        <enum>Qt::MoveAction</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

@@ -37,6 +37,7 @@ SOURCES += \
     logger/logger.cpp \
     main.cpp \
     player_core/player.cpp \
+    widgets/editablelistwidget.cpp \
     widgets/mylist.cpp \
     widgets/myslider.cpp
 
@@ -67,6 +68,7 @@ HEADERS += \
     static_classes/fileassistant.h      \
     static_classes/styler.h \
     static_classes/util.h \
+    widgets/editablelistwidget.h \
     widgets/mylist.h \
     widgets/myslider.h
 

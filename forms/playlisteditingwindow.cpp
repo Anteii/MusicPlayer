@@ -1,5 +1,5 @@
 #include "playlisteditingwindow.h"
-#include "ui_playlistconfigurationwindow.h"
+#include "ui_playlisteditingwindow.h"
 
 #include <QMessageBox>
 
@@ -66,8 +66,8 @@ void PlaylistEditingWindow::accept()
       QMessageBox::warning(this, "Be carefull!", "Playlist name field is empty");
       return;
     }
-  pl->setName(ui->playlistName->text().toStdString());
-  QString path = (PlayList::getPlaylistsDirectory() + "//" + pl->getName() + ".txt").c_str();
+  std::string name = ui->playlistName->text().toStdString();
+  QString path = (PlayList::getPlaylistsDirectory() + "//" + name + ".txt").c_str();
   qDebug() << path;
   QList<QString> temp;
   for(int i = 0; i < ui->trackList->count(); ++i){

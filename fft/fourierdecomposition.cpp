@@ -1,8 +1,5 @@
 #include "fourierdecomposition.h"
 
-FourierDecomposition::FourierDecomposition(PlayerController *player) {
-    this->player = player;
-}
 double FourierDecomposition::getY(double x, bool isRightChannel) {
     x += 0.05;
     x *= player->getTrackFile()->getSampleRate();

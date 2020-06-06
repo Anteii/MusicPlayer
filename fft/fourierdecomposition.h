@@ -1,16 +1,12 @@
 #ifndef FOURIERDECOMPOSITION_H
 #define FOURIERDECOMPOSITION_H
-#include "controllers/playercontroller.h"
+#include "fft/ifourier.h"
 #include <math.h>
 
-class FourierDecomposition
+class FourierDecomposition : public IFourier
 {
-protected:
-    PlayerController *player;
-    const double dpi = 2*acos(-1);
 public:
-    FourierDecomposition(PlayerController *player);
-    virtual double* GetFrame(double x, int count);
+    double* GetFrame(double x, int count) override;
 private:
     double getY(double x, bool isRightChannel);
     double integral(double a, double freq, bool isRightChannel);

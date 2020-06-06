@@ -24,6 +24,7 @@ SOURCES += \
     decoder/musicfiledecoder.cpp        \
     fft/firstfourierdecomposition.cpp \
     fft/fourierdecomposition.cpp \
+    fft/ifourier.cpp \
     forms/errorwindow.cpp \
     forms/mainwindow.cpp                \
     forms/playlisteditingwindow.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     decoder/musicfiledecoder.h          \
     fft/firstfourierdecomposition.h \
     fft/fourierdecomposition.h \
+    fft/ifourier.h \
     forms/errorwindow.h \
     forms/mainwindow.h                  \
     forms/playlisteditingwindow.h \

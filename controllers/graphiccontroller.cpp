@@ -1,4 +1,6 @@
 #include "graphiccontroller.h"
+#include "fft/firstfourierdecomposition.h"
+#include "fft/fourierdecomposition.h"
 
 GraphicController::GraphicController(QObject *parent) :
   QObject(parent), current(NONE), vis(NULL), graphic(NULL), updater(NULL)
@@ -118,13 +120,13 @@ void GraphicController::_setVisualization(int type)
     break;
 
     case FIRST:
-      vis = new FourierDraw((OGLF*)(this->graphic), 0);
+      vis = new FourierDraw((OGLF*)(this->graphic), new FirstFourierDecomposition(), 1200);
       graphic->setEffect(vis);
       graphic->initEffect();
     break;
 
     case FOURIER:
-        vis = new FourierDraw((OGLF*)(this->graphic), 1);
+        vis = new FourierDraw((OGLF*)(this->graphic), new FourierDecomposition());
         graphic->setEffect(vis);
         graphic->initEffect();
     break;

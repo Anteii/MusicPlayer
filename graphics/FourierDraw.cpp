@@ -1,10 +1,10 @@
 #include "FourierDraw.h"
 #include <fstream>
 #include <string>
-#define n 120
 
-FourierDraw::FourierDraw(OGLF * _f,int index) : f(_f){
-    this->index = index;
+FourierDraw::FourierDraw(OGLF * _f,IFourier* fourier, int n) : f(_f){
+    dec = fourier;
+    this->n = n;
 }
 
 void FourierDraw::init() {
@@ -68,10 +68,8 @@ double FourierDraw::Normalize(double x) {
 }
 void FourierDraw::setPlayerController(PlayerController *ctr)
 {
-  pc = ctr;
-  if(index == 0)
-    dec = new FirstFourierDecomposition(ctr);
-  else dec = new FourierDecomposition(ctr);
+    pc = ctr;
+    dec->SetPlayer(ctr);
 }
 GLuint FourierDraw::LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
 

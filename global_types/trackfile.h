@@ -1,15 +1,22 @@
 #ifndef TRACKFILE_H
 #define TRACKFILE_H
 
+/*!
+ * \brief The track file class
+ *
+ * Describe file with music data
+ *
+ * Should be used in player, decoder or visulasization classes only
+ */
 class TrackFile
 {
 public:
   TrackFile(const char* _name, const char* _ext,
             unsigned short _numChannels, unsigned long _sampleRate,
-            int _bitRate, char * _data, unsigned int _size);
+            int _byteRate, char * _data, unsigned int _size);
   unsigned short getNumChannels();
   unsigned long getSampleRate();
-  unsigned long getBitRate();
+  unsigned long getByteRate();
   unsigned int getSize();
   short getBitsPerSample();
   char * getData();

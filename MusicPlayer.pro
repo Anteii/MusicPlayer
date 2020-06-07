@@ -69,7 +69,6 @@ HEADERS += \
     player_core/player.h \
     static_classes/fileassistant.h      \
     static_classes/styler.h \
-    static_classes/util.h \
     widgets/editablelistwidget.h \
     widgets/mylist.h \
     widgets/myslider.h

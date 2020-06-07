@@ -3,7 +3,13 @@
 
 
 #pragma once
-
+/*!
+ * \brief The music file struct
+ *
+ * This struct used for wav decoding
+ *
+ * @sa MusicFileDecoder::decodeWAV()
+ */
 struct MusicFile {
 
 	struct WAVHEADER
@@ -69,17 +75,7 @@ struct MusicFile {
 
 		// Далее следуют непосредственно Wav данные.
 	};
-	struct SamplesBuffer {
-		unsigned int size;
-		unsigned int length;
-		short int* arr;
-	};
 
 	WAVHEADER header;
-	SamplesBuffer samplesBuffer;
-public:
-	~MusicFile(){
-	  delete[] samplesBuffer.arr;
-	}
 };
 #endif

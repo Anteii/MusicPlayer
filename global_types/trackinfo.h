@@ -3,6 +3,11 @@
 
 #include <string>
 
+/*!
+ * \brief The track information class
+ *
+ * Keep some track data and provide it to other components
+ */
 class TrackInfo
 {
 private:

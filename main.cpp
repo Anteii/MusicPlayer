@@ -5,18 +5,11 @@
 #include <vector>
 #include <decoder/musicfiledecoder.h>
 #include "logger/logger.h"
-/*!
-* @brief Entry point
-*
-* Execution of program
-* starts here
-*
-* @param argc Number of arguments
-* @param argv List of arguments
-*
-* @return Program exit status
-*/
+
 Logger logger;
+/*!
+* @brief Redirect qDebug() stream to log
+*/
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
    std::string localMsg = msg.toStdString();
@@ -38,14 +31,22 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
        abort();
    }
 }
-
+/*!
+* @brief Entry point
+*
+* Execution of program
+* starts here
+*
+* @param argc Number of arguments
+* @param argv List of arguments
+*
+* @return Program exit status
+*/
 int main(int argc, char *argv[])
 {
-  // Если расскоментить эти строчки, то вывод будет в логгер
   //qInstallMessageHandler(myMessageOutput); // Install the handler
   QApplication a(argc, argv);
   MainWindow w(&logger);
   w.show();
-  // почему-то выдает ошибку
   return a.exec();
 }

@@ -56,13 +56,6 @@
      </widget>
     </item>
     <item>
-     <widget class="QRadioButton" name="viz_1">
-      <property name="text">
-       <string>Test</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <widget class="QRadioButton" name="viz_2">
       <property name="acceptDrops">
        <bool>false</bool>

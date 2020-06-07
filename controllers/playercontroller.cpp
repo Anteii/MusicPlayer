@@ -1,5 +1,6 @@
 #include "playercontroller.h"
 
+#include <QIcon>
 #include <QMessageBox>
 
 PlayerController::PlayerController(QObject *parent) : QObject(parent)
@@ -200,9 +201,11 @@ int PlayerController::playPrevTrack()
 int PlayerController::showErrorBox()
 {
   QMessageBox msgBox;
-  msgBox.setWindowTitle("");
-  msgBox.setText("Let's celbrate");
-  msgBox.setStyleSheet(QString::fromUtf8(("QPushButton{ width:200px; height:50px; background-color: rgb(56, 75, 44); color: white;} QMessageBox{ background-color: rgb(0, 75, 141); color: white; } ")));
-  msgBox.setInformativeText("File can not be found");
+  msgBox.setWindowTitle("Error");
+  msgBox.setIcon(QMessageBox::Icon::Warning);
+  msgBox.setWindowIcon(QIcon(":/Windows/resources/icons/windows/errorWindow.png"));
+  msgBox.setText("Error");
+  //msgBox.setStyleSheet(QString::fromUtf8(("QPushButton{ width:200px; height:50px; background-color: rgb(56, 75, 44); color: white;} QMessageBox{ background-color: rgb(0, 75, 141); color: white; } ")));
+  msgBox.setInformativeText("File can't be found. This track will be deleted from this playlist.");
   return msgBox.exec();
 }

@@ -24,7 +24,8 @@ PlaylistEditingWindow::~PlaylistEditingWindow()
 void PlaylistEditingWindow::addTrack(TrackInfo track, bool checked)
 {
   QListWidgetItem *item = new QListWidgetItem(
-        QString((track.getName() + "." + track.getExt()).c_str()), ui->trackList);
+        QString((track.getName() + "." + track.getExt()).c_str()), ui->trackList
+  );
   item->setFlags(item->flags() | (Qt::ItemIsUserCheckable));
   item->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
   ui->trackList->addItem(item);
@@ -34,6 +35,8 @@ void PlaylistEditingWindow::setPlaylist(PlayList * _pl)
 {
   pl = _pl;
   PlayList * alls = PlayList::getBaseTrackPlaylist();
+  if (pl != NULL)
+    loadTracks(pl);
   for(int i = 0; i < alls->size(); ++i){
       try {
         bool flag = false;
@@ -41,7 +44,8 @@ void PlaylistEditingWindow::setPlaylist(PlayList * _pl)
         if (pl != NULL){
           flag = pl->contains(t1);
         }
-        addTrack(t1, flag);
+        if (!flag)
+          addTrack(t1, false);
       } catch (std::logic_error err) {
         continue;
       }
@@ -50,6 +54,19 @@ void PlaylistEditingWindow::setPlaylist(PlayList * _pl)
   ui->playlistName->setPlaceholderText("Playlist name");
   if (pl != NULL){
       ui->playlistName->setText(QString(pl->getName().c_str()));
+    }
+}
+
+void PlaylistEditingWindow::loadTracks(PlayList *pl)
+{
+  for(int i = 0; i < pl->size(); ++i){
+      try {
+        TrackInfo t1 = pl->getCurrentSong();
+        addTrack(t1, true);
+      } catch (std::logic_error err) {
+        continue;
+      }
+      pl->setPosition(pl->getPosition() + 1);
     }
 }
 
@@ -67,14 +84,15 @@ void PlaylistEditingWindow::accept()
       return;
     }
   std::string name = ui->playlistName->text().toStdString();
-  QString path = (PlayList::getPlaylistsDirectory() + "//" + name + ".txt").c_str();
+  QString path = FileAssistant::getPlaylistPath(QString(name.c_str()));
   qDebug() << path;
   QList<QString> temp;
   for(int i = 0; i < ui->trackList->count(); ++i){
       auto item = ui->trackList->item(i);
-      if (item->checkState() == Qt::Checked)
-        temp.append(QString(item->text()));
+      if (item->checkState() == Qt::Checked){
+        temp.append(item->text());
         qDebug() << item->text();
+      }
     }
   if (temp.size() == 0){
       QMessageBox::warning(this, "Be carefull!", "Can't create empty playlist");

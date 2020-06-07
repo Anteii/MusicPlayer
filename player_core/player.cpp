@@ -67,7 +67,7 @@ TrackInfo Player::getRandTrack()
   if (currentPlayList == NULL)
     throw std::logic_error(std::string("Playlist isn't set"));
 
-  int len = currentPlayList->getSongCount();
+  int len = currentPlayList->size();
   int index = rand() % len;
   currentPlayList->setPosition(index);
   return currentPlayList->getCurrentSong();
@@ -247,6 +247,7 @@ void Player::loadTrack(const TrackInfo& track)
 {
   TrackFile * tmp = trackFile;
   trackFile = decoder->decodeFile(track.getPath());
+  qDebug() << trackFile->getBitsPerSample();
   if (tmp != NULL) {
       delete tmp;
     }

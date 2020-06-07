@@ -2,6 +2,7 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 
 ListController::ListController(QObject *parent) : QObject(parent)
@@ -27,6 +28,19 @@ void ListController::clear()
 {
   if(!isInited) return;
   list->clear();
+}
+
+void ListController::update()
+{
+  if (whatDisplays() == TRACKS) {
+      clear();
+      addGoBack();
+      loadTracks();
+    }
+  else if (whatDisplays() == PLAYLISTS) {
+      clear();
+      loadPlaylists();
+    }
 }
 
 void ListController::addTrack(QString name)
@@ -126,31 +140,17 @@ void ListController::ProvideContextMenu(const QPoint &pos)
   QAction* rightClickItem = submenu.exec(item);
   if (rightClickItem && rightClickItem->text().contains("delete..") )
   {
-      if (whatDisplays() == TRACKS) {
-          deleteTrack(getSelectedIndex());
-        }
-      else if (whatDisplays() == PLAYLISTS) {
+        if (whatDisplays() == PLAYLISTS) {
           deletePlaylist(getSelectedIndex());
         }
   }
   else if (rightClickItem && rightClickItem->text().contains("add..") ){
-      if (whatDisplays() == TRACKS) {
-          addTrack(getSelectedIndex());
-        }
-      else if (whatDisplays() == PLAYLISTS) {
+        short int* arr;if (whatDisplays() == PLAYLISTS) {
           addPlaylist();
         }
     }
   else if (rightClickItem && rightClickItem->text().contains("update") ){
-      if (whatDisplays() == TRACKS) {
-          clear();
-          addGoBack();
-          loadTracks();
-        }
-      else if (whatDisplays() == PLAYLISTS) {
-          clear();
-          loadPlaylists();
-        }
+      update();
     }
   else if (rightClickItem && rightClickItem->text().contains("edit..") ){
       if (whatDisplays() == PLAYLISTS) {
@@ -162,16 +162,6 @@ void ListController::ProvideContextMenu(const QPoint &pos)
 PlayList *ListController::getPlayList()
 {
   return currentPlayList;
-}
-
-void ListController::deleteTrack(int ind)
-{
-
-}
-
-void ListController::addTrack(int ind)
-{
-
 }
 
 void ListController::deletePlaylist(int ind)
@@ -190,18 +180,23 @@ void ListController::addPlaylist()
   //QString fileName = QFileDialog::getOpenFileName( NULL,
   //tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
   win.exec();
+  update();
 }
 
 void ListController::editPlaylist()
 {
   PlayList * pl = new PlayList(
-        PlayList::getPlaylistsDirectory() + "//" + getSelectedItem()->text().toStdString() + ".txt");
+        FileAssistant::getPlaylistPath(
+          getSelectedItem()->text()).toStdString()
+          );
   PlaylistEditingWindow win;
   win.setModal(true);
   win.setPlaylist(pl);
   //QString fileName = QFileDialog::getOpenFileName( NULL,
   //tr("Open Playlist file"), "/home/", tr("Playlist Files (*.txt)"));
   win.exec();
+  qDebug() << "Changed";
+  update();
 }
 
 void ListController::createItem(QString name, QString type, QString icoPath)

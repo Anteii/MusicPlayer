@@ -7,7 +7,10 @@
 
 #include "fileassistant.h"
 
-
+/*!
+ * \brief The Styler class
+ * This class works with external css files
+ */
 class Styler
 {
 public:

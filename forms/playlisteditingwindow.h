@@ -19,6 +19,7 @@ public:
   ~PlaylistEditingWindow();
   void addTrack(TrackInfo track, bool checked = false);
   void setPlaylist(PlayList * pl = NULL);
+  void loadTracks(PlayList * pl);
   void setAllChecked();
 protected:
   void accept() override;

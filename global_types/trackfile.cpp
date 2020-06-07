@@ -1,12 +1,15 @@
 #include "trackfile.h"
-
+#include <qDebug>
 TrackFile::TrackFile(const char* _name, const char* _ext,
                      unsigned short _numChannels, unsigned long _sampleRate,
-                     int _bitRate, char * _data, unsigned int _size) :
+                     int _byteRate, char * _data, unsigned int _size) :
   name(_name), ext(_ext), numChannels(_numChannels), sampleRate(_sampleRate),
-  bitRate(_bitRate), data(_data), size(_size)
+  byteRate(_byteRate), data(_data), size(_size)
 {
-  bitsPerSample = bitRate * 1024 * 8 / numChannels / sampleRate;
+  double t = 1.0 * byteRate / numChannels / sampleRate;
+  bitsPerSample = (int)t;
+  bitsPerSample <<= 3;
+  qDebug() << bitsPerSample;
 }
 
 unsigned short TrackFile::getNumChannels()
@@ -19,9 +22,9 @@ unsigned long TrackFile::getSampleRate()
   return sampleRate;
 }
 
-unsigned long TrackFile::getBitRate()
+unsigned long TrackFile::getByteRate()
 {
-  return bitRate;
+  return byteRate;
 }
 
 unsigned int TrackFile::getSize()

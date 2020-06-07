@@ -40,17 +40,6 @@ void GraphicController::setLogger(Logger *_logger)
   logger = _logger;
 }
 
-void GraphicController::handleChangedTrack()
-{
-  LOG(Logger::Message, "Start track changing handling in graphicController");
-  LOG(Logger::Message, "Pause graphic updating");
-  graphic->setRedFlag(true);
-  LOG(Logger::Message, "Wait while graphic widget still updating");
-  while(graphic->isUpdating());
-  emit readyToChange();
-  //trackChanging = true;
-}
-
 GraphicController::~GraphicController()
 {
   stopUpdating();
@@ -72,11 +61,8 @@ void GraphicController::startUpdating()
 void GraphicController::stopUpdating()
 {
   flags._isUpdating = false;
-  qDebug() << "PUSSY1";
   graphic->setRedFlag(true);
-  qDebug() << "PUSSY2";
   while(graphic->isUpdating());
-  qDebug() << "PUSSY3";
 }
 
 void GraphicController::setVisualization(int type)
@@ -89,6 +75,7 @@ void GraphicController::setVisualization(int type)
 void GraphicController::setPlayerController(PlayerController *pc)
 {
   playerController = pc;
+  if (!isInited()) return;
   graphic->setPlayerController(pc);
 }
 
@@ -111,12 +98,6 @@ void GraphicController::_setVisualization(int type)
       graphic->setRedFlag(false);
       while(graphic->isUpdating());
       graphic->update();
-    break;
-
-    case TEST:
-      vis = new OGLTest((OGLF*)(this->graphic));
-      graphic->setEffect(vis);
-      graphic->initEffect();
     break;
 
     case FIRST:
@@ -147,16 +128,17 @@ void GraphicController::initUpdaterThread()
 
       flags->_updaterIsRunning = true;
       // wait till not initialized
-      while(!flags->_isInited) _sleep(100);
+      while(!flags->_isInited)
+        std::this_thread::sleep_for(std::chrono::milliseconds(60));
       // starting updating loop
       while(true){
            // updating
            while (flags->_isUpdating){
                graphic->update();
-               _sleep(68);
+               std::this_thread::sleep_for(std::chrono::milliseconds(60));
              }
            if (flags->_shutDown) break;
-           _sleep(60);
+           std::this_thread::sleep_for(std::chrono::milliseconds(60));
         }
       flags->_updaterIsRunning = false;
     }, (int)this);

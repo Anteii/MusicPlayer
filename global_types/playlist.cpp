@@ -52,7 +52,7 @@ PlayList::PlayList(const std::string& path) : PlayList()
 }
 
 PlayList::PlayList(){
-  currentSong = 0;
+  currentIndex = 0;
   playlistName = "";
   trackDirectory = defaultTrackDirectory;
 }
@@ -87,9 +87,9 @@ void PlayList::setName(const std::string & _name)
 // Then, if need, go backward also deleting invalid elements.
 TrackInfo PlayList::getNextSong()
 {
-  if (currentSong == list.size() - 1)
+  if (currentIndex == list.size() - 1)
     throw std::out_of_range(std::string("Playlist out of range"));
-  ++currentSong;
+  ++currentIndex;
   return getCurrentSong();
 }
 
@@ -97,38 +97,38 @@ TrackInfo PlayList::getNextSong()
 // go forward also deleting invalid elements.
 TrackInfo PlayList::getPrevSong()
 {
-  if(currentSong == 0)
+  if(currentIndex == 0)
     throw std::out_of_range(std::string("Playlist out of range"));
-  --currentSong;
+  --currentIndex;
   return getCurrentSong();
 }
 
 TrackInfo PlayList::getCurrentSong()
 {
   std::ifstream checker;
-  checker.open(list.at(currentSong).getPath());
+  checker.open(list.at(currentIndex).getPath());
   if (checker.good()){
-      return list.at(currentSong);
+      return list.at(currentIndex);
     }
   throw std::logic_error(
-        list.at(currentSong).getName() + "." +list.at(currentSong).getExt() + " " +
+        list.at(currentIndex).getName() + "." +list.at(currentIndex).getExt() + " " +
         "is invalid file.");
 }
 
 void PlayList::toFirstSong()
 {
-  currentSong = 0;
+  currentIndex = 0;
 }
 
 void PlayList::toLastSong()
 {
-  currentSong = list.size() - 1;
+  currentIndex = list.size() - 1;
 }
 
 void PlayList::setPosition(int index)
 {
   if (index >= 0 && index < list.size()){
-      currentSong = index;
+      currentIndex = index;
     }
 }
 
@@ -136,18 +136,13 @@ void PlayList::setSong(const TrackInfo& track)
 {
   for(int i = 0; i < list.size(); ++i){
       if (list.at(i) == track){
-          currentSong = i;
+          currentIndex = i;
           break;
         }
     }
 }
 
 int PlayList::size()
-{
-  return list.size();
-}
-
-int PlayList::getSongCount()
 {
   return list.size();
 }
@@ -170,7 +165,7 @@ PlayList *PlayList::clone()
     }
   temp->playlistName = playlistName;
   temp->trackDirectory = trackDirectory;
-  temp->currentSong = currentSong;
+  temp->currentIndex = currentIndex;
   return temp;
 }
 

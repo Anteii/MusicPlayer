@@ -5,14 +5,18 @@
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
-
+/*!
+ * @brief The file assistance class
+ * This class provides Qt - based static functions to work with files etc.
+ */
 class FileAssistant
 {
 public:
   static inline QString getRootPath() { return QDir::current().path(); }
   static inline QString getPlaylistPath(QString const & name){
-    return getPlaylistsPath().append("\\").append(name).append(".txt");}
+    return getPlaylistsPath().append("/").append(name).append(".txt");}
   static inline void initPlaylistsDir(){
     QDir temp = QDir::current();
     if (!temp.cd("playlists")){
@@ -47,13 +51,18 @@ public:
   }
   static int WriteFile(const QString& path, QList<QString>* list){
     QFile file(path);
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if(file.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text))
     {
         QTextStream stream(&file);
         for(int i = 0; i < list->size(); ++i){
             stream << list->at(i) << '\n';
           }
-        file.flush();
+        if ( !file.flush() ){
+            qDebug() << "Error occured when writing in file";
+          }
+        else{
+            qDebug() << "Success";
+          }
         file.close();
         return 0;
     }
@@ -61,6 +70,21 @@ public:
   }
   static inline QString getStyle(QString const & type, QString const & fileName){
     return getFileContent(":/" + type + "/resources/styles/" + type + "/" + fileName + ".css");
+  }
+  static void removeFile(const QString& path){
+    QFile file (path);
+    if (!file.remove())
+      qDebug() << "Fuck";
+    qDebug() << file.errorString();
+    qDebug() << file.permissions();
+  }
+  static bool fileExists(const QString& path) {
+      QFileInfo check_file(path);
+      if (check_file.exists() && check_file.isFile()) {
+          return true;
+      } else {
+          return false;
+      }
   }
 private:
   FileAssistant();

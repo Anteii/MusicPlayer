@@ -28,13 +28,6 @@ void SettingsWindow::on_viz_0_clicked()
   emit visTypeChanged(visualizationType);
 }
 
-void SettingsWindow::on_viz_1_clicked()
-{
-  LOG(Logger::Message, "Choose 'TEST' visualization");
-  visualizationType = GraphicController::TEST;
-  emit visTypeChanged(visualizationType);
-}
-
 void SettingsWindow::on_viz_2_clicked()
 {
   LOG(Logger::Message, "Choose 'FIRST' visualization");

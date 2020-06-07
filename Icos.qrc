@@ -12,6 +12,7 @@
         <file>resources/icons/windows/mainWindow.png</file>
         <file>resources/icons/windows/settingsWindow.png</file>
         <file>resources/icons/windows/playlistEditingWindow.png</file>
+        <file>resources/icons/windows/errorWindow.png</file>
     </qresource>
     <qresource prefix="/ListItems">
         <file>resources/icons/listItems/back.png</file>

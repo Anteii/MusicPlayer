@@ -9,10 +9,10 @@ FourierDraw::FourierDraw(OGLF * _f,IFourier* fourier, int n) : f(_f){
 
 void FourierDraw::init() {
     g_vertex_buffer_data = new GLfloat[12] {
-       0.0f, 0.0f, 0.0f,
-       0.8f, 0.0f, 0.0f,
-       0.0f, 1.0f, 0.0f,
-       0.8f, 1.0f, 0.0f
+       0.1f, 0.0f, 0.0f,
+       0.9f, 0.0f, 0.0f,
+       0.1f, 1.0f, 0.0f,
+       0.9f, 1.0f, 0.0f
     };
     f->glGenBuffers(1, &vertexbuffer);
     f->glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);

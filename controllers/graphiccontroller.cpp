@@ -101,7 +101,7 @@ void GraphicController::_setVisualization(int type)
     break;
 
     case FIRST:
-      vis = new FourierDraw((OGLF*)(this->graphic), new FirstFourierDecomposition(), 1200);
+      vis = new FourierDraw((OGLF*)(this->graphic), new FirstFourierDecomposition(), 600);
       graphic->setEffect(vis);
       graphic->initEffect();
     break;

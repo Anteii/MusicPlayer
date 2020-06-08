@@ -9,6 +9,11 @@ class FirstFourierDecomposition : public IFourier {
     unsigned int* adress;
     std::complex<double>* W2n;
     std::complex<double> *tempArr;
+
+    enum Channels {
+        Singl, Left, Right
+    };
+
 public:
     FirstFourierDecomposition();
     ~FirstFourierDecomposition();
@@ -17,7 +22,7 @@ private:
     void setAdress();
     void CreateW2n();
     void fft(std::complex<double> *x, bool complement);
-    template <class T> void getCompl(T arr, int i, int Channels);
+    void getCompl(short int* arr, int i, Channels channels);
 };
 
 #endif // FIRSTFOURIERDECOMPOSITION_H

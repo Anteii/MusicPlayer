@@ -12,23 +12,20 @@ FirstFourierDecomposition::~FirstFourierDecomposition(){
     delete[] W2n;
     delete[] tempArr;
 }
-template <class T> void FirstFourierDecomposition::getCompl(T arr, int i, int Channels) {
-    if(Channels == 0) {
+void FirstFourierDecomposition::getCompl(short int* arr, int i, Channels channels) {
+    if(channels == Channels::Singl) {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[i+j] / 2);
-            tempArr[j].imag(0);
+            tempArr[j] = arr[i+j] / 32.0;
         }
     }
-    else if(Channels == 1) {
+    else if(channels == Channels::Left) {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[2*(i+j)] / 2);
-            tempArr[j].imag(0);
+            tempArr[j] = arr[2*(i+j)] / 32.0;
         }
     }
     else {
         for(int j = 0; j < size; ++j) {
-            tempArr[j].real(arr[2*(i+j) + 1] / 2);
-            tempArr[j].imag(0);
+            tempArr[j] = arr[2*(i+j) + 1] / 32.0;
         }
     }
 }
@@ -37,19 +34,18 @@ double* FirstFourierDecomposition::GetFrame(double x, int count) {
     auto getMod = [](std::complex<double> t){ return sqrt(t.real()*t.real() + t.imag()*t.imag()); };
     x *= player->getTrackFile()->getSampleRate();
     unsigned int i = (int)x;
-    // qDebug() << player->getTrackFile()->getBitsPerSample();
     {
         double tem = 1.01;
-        short int* arr = (short int*)player->getTrackFile()->getData();
-        if(player->getTrackFile()->getNumChannels() == 1) getCompl(arr, i, 0);
-        else getCompl(arr, i, 1);
+        if(player->getTrackFile()->getNumChannels() == 1)
+            getCompl((short int*)player->getTrackFile()->getData(), i, Channels::Singl);
+        else getCompl((short int*)player->getTrackFile()->getData(), i, Channels::Left);
         fft(tempArr, true);
         for(int j = 0; j < count; ++j)
             res[2*j] = getMod(tempArr[(int)(exp(j * log(size * tem) / count) / tem)]);
         if((player->getTrackFile()->getNumChannels() == 1))
             for(int j = 0; j < count; ++j) res[2*j + 1] = res[2*j];
         else {
-            getCompl(arr, i, 2);
+            getCompl((short int*)player->getTrackFile()->getData(), i, Channels::Right);
             fft(tempArr, true);
             for(int j = 0; j < count; ++j)
                 res[2*j + 1] = getMod(tempArr[(int)(exp(j * log(size * tem) / count) / tem)]);

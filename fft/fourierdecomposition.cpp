@@ -4,18 +4,18 @@ double FourierDecomposition::getY(double x, bool isRightChannel) {
     x += 0.05;
     x *= player->getTrackFile()->getSampleRate();
     unsigned int t = x;
-    if (player->getTrackFile()->getBitsPerSample() == 8)
-    {
-        char* arr = player->getTrackFile()->getData();
-        if (player->getTrackFile()->getNumChannels() == 1)
-            if(t < player->getTrackFile()->getSize())return arr[t];
-            else return 0;
-        t <<= 1;
-        if(t >= player->getTrackFile()->getSize()) return 0;
-        if (isRightChannel) return arr[t - 1];
-        else return arr[t];
-    }
-    else
+//    if (player->getTrackFile()->getBitsPerSample() == 8)
+//    {
+//        char* arr = player->getTrackFile()->getData();
+//        if (player->getTrackFile()->getNumChannels() == 1)
+//            if(t < player->getTrackFile()->getSize())return arr[t];
+//            else return 0;
+//        t <<= 1;
+//        if(t >= player->getTrackFile()->getSize()) return 0;
+//        if (isRightChannel) return arr[t - 1];
+//        else return arr[t];
+//    }
+//    else
     {
         short int* arr = (short int*)player->getTrackFile()->getData();
         if (player->getTrackFile()->getNumChannels() == 1)

@@ -52,8 +52,9 @@ private:
   unsigned char* buffer;
   //! mpg123 buffer size
   size_t buffer_size;
-
+  //! Decode wav-file
   TrackFile *decodeWAV(std::string path);
+  //! Decode mp3-file
   TrackFile *decodeMP3(std::string path);
 };
 #endif // MUSICFILEDECODER_H

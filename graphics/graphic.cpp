@@ -16,11 +16,6 @@ OGLF* Graphic::getOGLF()
   return (OGLF*)this;
 }
 
-QOpenGLContext* Graphic::getContext()
-{
-  return context();
-}
-
 void Graphic::initEffect()
 {
   if (effect != NULL){

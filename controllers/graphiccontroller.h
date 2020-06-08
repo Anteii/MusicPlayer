@@ -25,8 +25,9 @@ class GraphicController : public QObject
 {
   Q_OBJECT
 public:
+  //! Current visualization type
   enum VisualizationTypes{
-    NONE, FIRST, FOURIER
+    NONE, FFT, DFT
   };
   //! Constructor
   explicit GraphicController(QObject *parent = nullptr);

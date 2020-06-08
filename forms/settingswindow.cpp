@@ -9,6 +9,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) :
   visualizationType = GraphicController::NONE;
   this->setWindowIcon(QIcon(":/Windows/resources/icons/windows/settingsWindow.png"));
   this->setWindowTitle("Settings");
+  setFixedSize(size());
 }
 
 void SettingsWindow::setLogger(Logger *_logger)
@@ -30,14 +31,14 @@ void SettingsWindow::on_viz_0_clicked()
 
 void SettingsWindow::on_viz_2_clicked()
 {
-  LOG(Logger::Message, "Choose 'FIRST' visualization");
-  visualizationType = GraphicController::FIRST;
+  LOG(Logger::Message, "Choose 'FFT' visualization");
+  visualizationType = GraphicController::FFT;
   emit visTypeChanged(visualizationType);
 }
 
 void SettingsWindow::on_radioButton_clicked()
 {
-    LOG(Logger::Message, "Choose 'FOURIER' visualization");
-    visualizationType = GraphicController::FOURIER;
+    LOG(Logger::Message, "Choose 'DFT' visualization");
+    visualizationType = GraphicController::DFT;
     emit visTypeChanged(visualizationType);
 }

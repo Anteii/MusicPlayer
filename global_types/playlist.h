@@ -89,8 +89,6 @@ public:
   int getPosition(){ return currentIndex;}
   //! Create playlist file
   static void createPlaylistFile(const std::string& name, PlayList * pl){
-    // check if exist
-    // .....
     std::ofstream out(playlistsDirectory + "//" + name + ".txt");
     auto vec = pl->getSongList();
     for (int i = 0; i < vec->size(); ++i){

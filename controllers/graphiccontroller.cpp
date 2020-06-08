@@ -3,7 +3,7 @@
 #include "fft/fourierdecomposition.h"
 
 GraphicController::GraphicController(QObject *parent) :
-  QObject(parent), current(NONE), vis(NULL), graphic(NULL), updater(NULL)
+  QObject(parent), vis(NULL), graphic(NULL), updater(NULL), current(NONE)
 {
   connect(
         this,
@@ -29,7 +29,8 @@ void GraphicController::delaySet(VisualizationTypes type)
 {
   std::thread waitAndGo([](GraphicController* gc, VisualizationTypes type){
     // wait till context isn't created
-    while(!gc->graphic->isInited()) _sleep(100);
+    while(!gc->graphic->isInited())
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
     emit gc->changeVisualization(type);
   }, this, type);
   waitAndGo.detach();
@@ -100,13 +101,14 @@ void GraphicController::_setVisualization(int type)
       graphic->update();
     break;
 
-    case FIRST:
+
+    case FFT:
       vis = new FourierDraw((OGLF*)(this->graphic), new FirstFourierDecomposition(), 600);
       graphic->setEffect(vis);
       graphic->initEffect();
     break;
 
-    case FOURIER:
+    case DFT:
         vis = new FourierDraw((OGLF*)(this->graphic), new FourierDecomposition());
         graphic->setEffect(vis);
         graphic->initEffect();
@@ -129,13 +131,14 @@ void GraphicController::initUpdaterThread()
       flags->_updaterIsRunning = true;
       // wait till not initialized
       while(!flags->_isInited)
-        std::this_thread::sleep_for(std::chrono::milliseconds(60));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
       // starting updating loop
       while(true){
            // updating
            while (flags->_isUpdating){
                graphic->update();
-               std::this_thread::sleep_for(std::chrono::milliseconds(60));
+               // 68 ms to get 60 fps
+               std::this_thread::sleep_for(std::chrono::milliseconds(68));
              }
            if (flags->_shutDown) break;
            std::this_thread::sleep_for(std::chrono::milliseconds(60));

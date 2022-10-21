@@ -30,6 +30,8 @@ This project was made with C++/Qt with several dependencies (OpenGL v4.3, OpenAL
 Visualization was created with usage of FFT, OpenGL and GLSL shaders. 
 
 To implement some features, several custom widgets were developed.
- 
+
+Documentation was generated with Doxygen.
+
 ## Developer Note
 This application was developed by me and my friend on our second year at the university. At the moment we hadn't attended software development courses yet, therefore code quallity is bad. Nevertheless I cherish this piece of command work.
